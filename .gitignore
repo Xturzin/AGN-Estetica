@@ -1,0 +1,69 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# ─── dependencies ─────────────────────────────────────
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# ─── next.js ──────────────────────────────────────────
+/.next/
+/out/
+/build
+
+# ─── testing ──────────────────────────────────────────
+/coverage
+*.lcov
+.nyc_output
+
+# ─── typescript ───────────────────────────────────────
+*.tsbuildinfo
+next-env.d.ts
+
+# ─── environment variables ────────────────────────────
+# Ignora variáveis locais (têm segredos!)
+.env
+.env*.local
+# IMPORTANTE: .env.example DEVE ser commitado (template público sem segredos)
+
+# ─── deploy ───────────────────────────────────────────
+.vercel
+
+# ─── supabase ─────────────────────────────────────────
+# Caches do Supabase CLI — NUNCA commitar
+.supabase/
+supabase/.branches/
+supabase/.temp/
+# OBS: supabase/migrations/ DEVE ser commitado (schema versionado)
+
+# ─── IDE / editor ─────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ─── system files ─────────────────────────────────────
+# macOS
+.DS_Store
+# Windows
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# ─── logs ─────────────────────────────────────────────
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ─── misc ─────────────────────────────────────────────
+*.pem
+*.tgz
+.cache/
+tmp/
+temp/
+
+# ─── monitoring ───────────────────────────────────────
+.sentryclirc
