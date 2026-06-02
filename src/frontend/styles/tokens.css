@@ -1,0 +1,230 @@
+/* ============================================================
+   AGN Estética — Design tokens & base component styles
+   ──────────────────────────────────────────────────────────────
+   Portado do handoff (components/tokens.css) com 3 ajustes:
+
+   1. Removido o @import do Google Fonts. A fonte Hanken Grotesk
+      é carregada via next/font/google no layout.tsx raiz
+      (auto self-host, sem layout shift).
+
+   2. As variáveis --font-head/body/num usam var(--font-hanken),
+      definida pelo next/font no body do layout.
+
+   3. Adicionadas 3 classes auxiliares que estavam no HTML do
+      handoff mas faltavam em components/tokens.css:
+      .agn-nav-section, .agn-soft-grid-bg, .agn-scrolly
+   ============================================================ */
+
+:root {
+  /* ink (text) */
+  --ink: #161a23;
+  --ink-2: #474d59;
+  --ink-3: #828995;
+  --ink-4: #aeb4c0;
+
+  /* surfaces */
+  --bg: #eaeef3;
+  --surface: #ffffff;
+  --surface-2: #f5f7fa;
+  --surface-3: #eef1f6;
+
+  /* lines */
+  --line: rgba(22, 26, 35, 0.07);
+  --line-2: rgba(22, 26, 35, 0.12);
+
+  /* accent — cobalt */
+  --accent: #1f6dff;
+  --accent-deep: #1357d6;
+  --accent-soft: #7aa6f5;
+  --accent-tint: #e9f0ff;
+  --accent-tint-2: #d3e2ff;
+  --accent-shadow: 31, 109, 255; /* rgb triplet para box-shadows */
+
+  /* status */
+  --ok: #17946b;        --ok-tint: #e4f5ee;    --ok-ink: #137256;
+  --warn: #c2873a;      --warn-tint: #f7eedd;  --warn-ink: #9a6a2a;
+  --info: #5a63d6;      --info-tint: #eceeff;  --info-ink: #4248b8;
+  --muted-tint: #eef1f6; --muted-ink: #828995;
+
+  /* radii */
+  --r-xs: 9px;
+  --r-sm: 11px;
+  --r-md: 16px;
+  --r-lg: 22px;
+  --r-xl: 28px;
+
+  /* shadows */
+  --shadow-sm: 0 1px 2px rgba(30, 45, 80, .05), 0 4px 14px rgba(30, 45, 80, .05);
+  --shadow: 0 2px 6px rgba(30, 45, 80, .05), 0 16px 38px rgba(30, 45, 80, .08);
+  --shadow-lg: 0 4px 12px rgba(30, 45, 80, .06), 0 30px 70px rgba(30, 45, 80, .12);
+
+  /* type — Hanken Grotesk via next/font (--font-hanken vem do layout) */
+  --font-head: var(--font-hanken), -apple-system, system-ui, sans-serif;
+  --font-body: var(--font-hanken), -apple-system, system-ui, sans-serif;
+  --font-num: var(--font-hanken), -apple-system, system-ui, sans-serif;
+  --font-mono: "SFMono-Regular", ui-monospace, Menlo, monospace;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); }
+
+.agn {
+  font-family: var(--font-body);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  line-height: 1.45;
+}
+.agn h1, .agn h2, .agn h3, .agn h4, .agn p { margin: 0; }
+
+/* ── type helpers ── */
+.agn-head { font-family: var(--font-head); font-weight: 700; letter-spacing: -.035em; }
+.agn-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; color: var(--ink-3); }
+.agn-num { font-family: var(--font-num); font-variant-numeric: tabular-nums; letter-spacing: -.02em; font-weight: 600; }
+.agn-tnum { font-variant-numeric: tabular-nums; }
+
+/* ── card ── */
+.agn-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow); }
+.agn-card--pad { padding: 26px; }
+
+/* ── button ── */
+.agn-btn {
+  font-family: var(--font-body); font-size: 13.5px; font-weight: 600;
+  border-radius: var(--r-sm); border: 1px solid transparent;
+  padding: 0 16px; height: 40px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  cursor: pointer; white-space: nowrap; letter-spacing: .01em;
+  transition: background .15s, border-color .15s, box-shadow .15s, transform .05s;
+}
+.agn-btn:active { transform: translateY(.5px); }
+.agn-btn:disabled { opacity: .5; cursor: not-allowed; }
+.agn-btn--primary { background: var(--accent); color: #fff; box-shadow: 0 2px 8px rgba(var(--accent-shadow), .32); }
+.agn-btn--primary:hover { background: var(--accent-deep); }
+.agn-btn--ghost { background: var(--surface); color: var(--ink); border-color: var(--line-2); }
+.agn-btn--ghost:hover { background: var(--surface-2); border-color: rgba(22, 26, 35, .18); }
+.agn-btn--quiet { background: transparent; color: var(--ink-2); }
+.agn-btn--quiet:hover { background: var(--surface-3); color: var(--ink); }
+.agn-btn--sm { height: 34px; font-size: 12.5px; padding: 0 13px; border-radius: 9px; }
+.agn-btn--lg { height: 48px; font-size: 15px; padding: 0 22px; }
+.agn-btn--block { display: flex; width: 100%; }
+
+/* ── icon button ── */
+.agn-iconbtn {
+  width: 38px; height: 38px; border-radius: 11px;
+  border: 1px solid var(--line-2); background: var(--surface);
+  cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+  position: relative; color: var(--ink-2);
+  transition: background .15s, border-color .15s;
+}
+.agn-iconbtn:hover { background: var(--surface-2); }
+.agn-iconbtn--active { background: var(--accent-tint); color: var(--accent-deep); border-color: transparent; }
+.agn-iconbtn__badge {
+  position: absolute; top: 7px; right: 7px;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--accent); box-shadow: 0 0 0 2px var(--surface);
+}
+
+/* ── status pill ── */
+.agn-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 600; letter-spacing: .01em;
+  padding: 4px 10px 4px 9px; border-radius: 999px;
+}
+.agn-pill__dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.agn-pill--ok { background: var(--ok-tint); color: var(--ok-ink); }
+.agn-pill--warn { background: var(--warn-tint); color: var(--warn-ink); }
+.agn-pill--info { background: var(--info-tint); color: var(--info-ink); }
+.agn-pill--muted { background: var(--muted-tint); color: var(--muted-ink); }
+
+/* ── chip ── */
+.agn-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12.5px; font-weight: 500; color: var(--ink-2);
+  background: var(--surface); border: 1px solid var(--line-2);
+  border-radius: 999px; padding: 6px 13px; cursor: pointer;
+  transition: background .15s, border-color .15s, color .15s;
+}
+.agn-chip:hover { background: var(--surface-2); }
+.agn-chip--active { background: var(--ink); color: #fff; border-color: var(--ink); }
+.agn-chip--active svg { stroke: #fff; }
+
+/* ── field / input ── */
+.agn-field { display: flex; flex-direction: column; gap: 7px; }
+.agn-label { font-size: 12.5px; font-weight: 600; color: var(--ink-2); letter-spacing: .01em; }
+.agn-input {
+  height: 44px; border: 1px solid var(--line-2); border-radius: var(--r-sm);
+  background: var(--surface); padding: 0 14px;
+  font-family: var(--font-body); font-size: 14.5px; color: var(--ink);
+  display: flex; align-items: center; gap: 10px; width: 100%;
+  transition: border-color .15s, box-shadow .15s;
+}
+.agn-input input {
+  border: 0; outline: 0; background: transparent;
+  font: inherit; color: inherit; flex: 1; width: 100%; padding: 0;
+}
+.agn-input input::placeholder { color: var(--ink-4); }
+.agn-input:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-tint); }
+
+/* ── avatar ── */
+.agn-avatar {
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-head); font-weight: 600; color: #fff;
+  flex: 0 0 auto; letter-spacing: .01em; overflow: hidden;
+}
+.agn-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+/* ── photo placeholder ── */
+.agn-photo {
+  position: relative; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  background-color: #dfe5ee;
+  background-image: repeating-linear-gradient(135deg, #dbe2ec 0 11px, #e4eaf2 11px 22px);
+}
+.agn-photo__tag {
+  font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .04em;
+  color: #7b828f; background: rgba(255, 255, 255, .72);
+  padding: 3px 8px; border-radius: 6px; backdrop-filter: blur(2px);
+}
+
+/* ── toggle ── */
+.agn-toggle {
+  width: 42px; height: 25px; border-radius: 999px;
+  background: var(--line-2); padding: 3px;
+  display: inline-flex; cursor: pointer; transition: background .2s;
+  flex: 0 0 auto; border: 0;
+}
+.agn-toggle--on { background: var(--accent); justify-content: flex-end; }
+.agn-toggle__knob { width: 19px; height: 19px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0, 0, 0, .2); }
+
+/* ── nav item ── */
+.agn-nav-item {
+  display: flex; align-items: center; gap: 12px;
+  height: 42px; padding: 0 13px; border-radius: 11px;
+  font-size: 14px; font-weight: 500; color: var(--ink-2);
+  cursor: pointer; transition: background .15s, color .15s;
+}
+.agn-nav-item:hover { background: var(--surface-3); color: var(--ink); }
+.agn-nav-item--active {
+  background: var(--accent); color: #fff; font-weight: 600;
+  box-shadow: 0 4px 12px rgba(var(--accent-shadow), .28);
+}
+.agn-nav-item--active svg { stroke: #fff; }
+
+/* ── nav section label (label de seção na sidebar) ── */
+.agn-nav-section {
+  font-size: 10.5px; font-weight: 700; letter-spacing: .13em;
+  text-transform: uppercase; color: var(--ink-4);
+  padding: 0 13px; margin: 22px 0 8px;
+}
+
+/* ── soft grid background (textura cobalto do hero/login) ── */
+.agn-soft-grid-bg {
+  background-image: radial-gradient(rgba(255, 255, 255, .5) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* ── overflow helper ── */
+.agn-scrolly { overflow: hidden; }
+
+/* ── misc ── */
+.agn-hr { height: 1px; background: var(--line); border: 0; width: 100%; }

@@ -1,5 +1,13 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import { Hanken_Grotesk } from "next/font/google";
+import "@/frontend/styles/tokens.css";
+
+const hankenGrotesk = Hanken_Grotesk({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+  variable: "--font-hanken",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "AGN Estética",
@@ -13,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body>{children}</body>
+      <body className={`${hankenGrotesk.variable} agn`}>{children}</body>
     </html>
   );
 }
