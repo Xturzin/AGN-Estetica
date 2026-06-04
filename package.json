@@ -6,9 +6,12 @@
     "dev": "next dev -p 1102",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:types": "supabase gen types typescript --linked --schema public > supabase/types/database.types.ts"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.10.3",
+    "@supabase/supabase-js": "^2.107.0",
     "lucide-react": "^1.17.0",
     "next": "14.2.35",
     "react": "^18",
@@ -20,6 +23,7 @@
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.35",
+    "supabase": "^2.104.0",
     "typescript": "^5"
   }
 }
