@@ -26,7 +26,9 @@ export async function updateSession(request: NextRequest) {
   });
 
   // Refresh implícito da sessão
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  return response;
+  return { response, supabase, user };
 }
