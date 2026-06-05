@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AGN Estética
 
-## Getting Started
+Sistema de gestão para clínica estética — área clínica (web desktop) + app do paciente (PWA mobile).
 
-First, run the development server:
+## Stack
+
+- **Next.js 14** (App Router) + **TypeScript strict**
+- **Supabase** (Postgres + Auth + Storage) — região São Paulo
+- **Vercel** (hosting + CI/CD)
+- **CSS vanilla** com `tokens.css` do design handoff
+- **Resend** (e-mail transacional), **Sentry** (erros), **GA4** (analytics)
+
+## Quick start
 
 ```bash
+git clone https://github.com/Xturzin/AGN-Estetica.git
+cd AGN-Estetica
+npm install
+cp .env.example .env.local
+# Preencher .env.local com credenciais Supabase
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Roda em **http://localhost:1102**.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+> Setup completo (incluindo Supabase, migrations e Admin) está em [docs/setup.md](docs/setup.md).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Áreas do sistema
 
-## Learn More
+| Área | Acesso | Quem |
+|---|---|---|
+| `/admin/*` | `/admin/login` | Admin (único, dono da clínica) |
+| `/dashboard, /agenda, /pacientes, ...` | `/login` | Equipe (admin, profissional, recepcionista) |
+| `/cliente/*` | `/cliente/login` | Pacientes (PWA mobile) |
 
-To learn more about Next.js, take a look at the following resources:
+## Documentação
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [Setup completo](docs/setup.md) — como rodar do zero
+- [Arquitetura](docs/architecture.md) — overview e decisões-chave
+- [Runbook](docs/runbook.md) — operações comuns (migrations, seed, types)
+- [Blueprint completo](AGN_Estetica_Blueprint_Arquitetural.md) — todas as 23 decisões arquiteturais
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Scripts
 
-## Deploy on Vercel
+| Comando | O que faz |
+|---|---|
+| `npm run dev` | Servidor de dev em `:1102` |
+| `npm run build` | Build de produção |
+| `npm run start` | Roda build localmente |
+| `npm run lint` | ESLint |
+| `npm run db:types` | Regenera types TS a partir do schema Supabase |
+| `npm run seed:admin` | Provisiona o Admin original (idempotente) |
+| `npx tsc --noEmit` | Typecheck sem emitir arquivos |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Status
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Stage 0 (fundação) concluído.** Em desenvolvimento ativo.
+
+Próximo: Stage 1 — Login com design do handoff.
+
+## Licença
+
+Privado. Todos os direitos reservados.
