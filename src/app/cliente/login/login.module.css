@@ -1,0 +1,68 @@
+.shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.brandTop {
+  flex: 0 0 auto;
+  padding: 30px 26px 26px;
+  position: relative;
+  overflow: hidden;
+}
+
+.brandGrid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.12;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.18) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.18) 1px, transparent 1px);
+  background-size: 36px 36px;
+}
+
+.brandContent {
+  position: relative;
+  z-index: 1;
+}
+
+.brandHeadline {
+  font-family: var(--font-head);
+  font-size: 30px;
+  font-weight: 500;
+  color: #fff;
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+  margin: 40px 0 0;
+  max-width: 260px;
+}
+
+.brandLead {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.72);
+  margin-top: 12px;
+  line-height: 1.55;
+  max-width: 270px;
+}
+
+.sheet {
+  flex: 1;
+  background: var(--surface);
+  border-radius: 28px 28px 0 0;
+  padding: 30px 24px 28px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sheetTitle {
+  font-family: var(--font-head);
+  font-size: 23px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.sheetSubtitle {
+  font-size: 13.5px;
+  color: var(--ink-3);
+  margin: 4px 0 24px;
+}

@@ -11,3 +11,4 @@ export { Logo } from "./Logo";
 export { PhotoSlot } from "./PhotoSlot";
 export { Pill } from "./Pill";
 export { Toggle } from "./Toggle";
+export { PhoneShell } from "./PhoneShell";
