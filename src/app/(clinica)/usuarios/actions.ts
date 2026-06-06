@@ -19,7 +19,7 @@ function buildRedirectTo(): string {
   const h = headers();
   const host = h.get("host") ?? "localhost:1102";
   const proto = h.get("x-forwarded-proto") ?? "http";
-  return `${proto}://${host}/login`;
+  return `${proto}://${host}/auth/callback?next=/login`;
 }
 
 export async function inviteUsuarioAction(
