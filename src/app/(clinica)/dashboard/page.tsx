@@ -17,6 +17,11 @@ const CARDS: DashboardCard[] = [
     title: "Serviços",
     desc: "Procedimentos oferecidos pela clínica.",
   },
+  {
+    href: "/usuarios",
+    title: "Equipe",
+    desc: "Membros da clínica e seus acessos.",
+  },
 ];
 
 export default function DashboardPage() {
