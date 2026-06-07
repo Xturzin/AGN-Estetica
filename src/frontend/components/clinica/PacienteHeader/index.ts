@@ -1,0 +1,1 @@
+export { PacienteHeader } from "./PacienteHeader";

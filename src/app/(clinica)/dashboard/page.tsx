@@ -1,12 +1,19 @@
 import Link from "next/link";
+import { getCurrentUser } from "@/backend/lib/auth/session";
 
 interface DashboardCard {
   href: string;
   title: string;
   desc: string;
+  adminOnly?: boolean;
 }
 
 const CARDS: DashboardCard[] = [
+  {
+    href: "/pacientes",
+    title: "Pacientes",
+    desc: "Cadastro e prontuário dos pacientes.",
+  },
   {
     href: "/configuracoes",
     title: "Configurações",
@@ -22,9 +29,19 @@ const CARDS: DashboardCard[] = [
     title: "Equipe",
     desc: "Membros da clínica e seus acessos.",
   },
+  {
+    href: "/permissoes",
+    title: "Permissões",
+    desc: "Matriz de acessos da equipe.",
+    adminOnly: true,
+  },
 ];
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const user = await getCurrentUser();
+  const isAdmin = user?.tipo === "admin";
+  const visibleCards = CARDS.filter((c) => !c.adminOnly || isAdmin);
+
   return (
     <div
       style={{
@@ -57,7 +74,7 @@ export default function DashboardPage() {
           gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
         }}
       >
-        {CARDS.map((c) => (
+        {visibleCards.map((c) => (
           <Link
             key={c.href}
             href={c.href}

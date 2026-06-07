@@ -40,3 +40,11 @@ export async function requirePermission(area: AreaPermissao): Promise<CurrentUse
 
   return user;
 }
+
+/** Exige que o usuário atual seja admin. */
+export async function requireAdmin(): Promise<CurrentUser> {
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
+  if (user.tipo !== "admin") redirect(getDefaultRouteForTipo(user.tipo));
+  return user;
+}
