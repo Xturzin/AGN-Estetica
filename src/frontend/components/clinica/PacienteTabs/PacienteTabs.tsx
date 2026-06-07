@@ -5,6 +5,11 @@ import { useSearchParams } from "next/navigation";
 import type { ReactNode } from "react";
 import { Card, Icon } from "@/frontend/components/ui";
 import type { Paciente } from "@/backend/services/pacienteService";
+import type { EvolucaoComAutor } from "@/backend/services/evolucaoService";
+import {
+  EvolucaoTimeline,
+  type EvolucaoFormResult,
+} from "@/frontend/components/clinica/EvolucaoTimeline";
 import styles from "./PacienteTabs.module.css";
 
 const TABS = [
@@ -17,9 +22,19 @@ const TABS = [
 
 interface PacienteTabsProps {
   paciente: Paciente;
+  evolucoes: EvolucaoComAutor[];
+  canEditProntuario: boolean;
+  createEvolucaoAction: (formData: FormData) => Promise<EvolucaoFormResult>;
+  updateEvolucaoAction: (formData: FormData) => Promise<EvolucaoFormResult>;
 }
 
-export function PacienteTabs({ paciente }: PacienteTabsProps) {
+export function PacienteTabs({
+  paciente,
+  evolucoes,
+  canEditProntuario,
+  createEvolucaoAction,
+  updateEvolucaoAction,
+}: PacienteTabsProps) {
   const sp = useSearchParams();
   const activeId = sp.get("aba") ?? "resumo";
   const basePath = `/pacientes/${paciente.id}`;
@@ -46,18 +61,40 @@ export function PacienteTabs({ paciente }: PacienteTabsProps) {
 
       <div className={styles.panel}>
         {activeId === "resumo" && <ResumoView paciente={paciente} />}
-        {activeId === "anamnese" && (
-          <PlaceholderView
-            title="Anamnese"
-            description="Formulário em 6 etapas com histórico de saúde do paciente."
-            comingIn="2.3"
-          />
+       {activeId === "anamnese" && (
+          <Card>
+            <div className={styles.placeholder}>
+              <h3 className={styles.placeholderTitle}>Anamnese</h3>
+              <p className={styles.placeholderDesc}>
+                Histórico de saúde do paciente em 4 etapas: dados gerais, saúde,
+                hábitos e estética.
+              </p>
+              <Link
+                href={`/pacientes/${paciente.id}/anamnese`}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  padding: "10px 20px",
+                  background: "var(--accent-deep)",
+                  color: "#fff",
+                  borderRadius: "var(--r-md)",
+                  textDecoration: "none",
+                  fontSize: 14,
+                  fontWeight: 600,
+                  marginTop: 4,
+                }}
+              >
+                Abrir anamnese completa
+              </Link>
+            </div>
+          </Card>
         )}
         {activeId === "atendimentos" && (
-          <PlaceholderView
-            title="Atendimentos & Evoluções"
-            description="Timeline clínica do paciente, com cada sessão e evolução registrada."
-            comingIn="2.4"
+          <EvolucaoTimeline
+            evolucoes={evolucoes}
+            canEdit={canEditProntuario}
+            createAction={createEvolucaoAction}
+            updateAction={updateEvolucaoAction}
           />
         )}
         {activeId === "fotos" && (
