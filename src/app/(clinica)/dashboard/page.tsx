@@ -1,113 +1,90 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { Card } from "@/frontend/components/ui";
 import { getCurrentUser } from "@/backend/lib/auth/session";
+import { getDashboardKPIs } from "@/backend/services/dashboardService";
+import { DashboardKPIs } from "@/frontend/components/clinica/DashboardKPIs";
+import styles from "./dashboard.module.css";
 
-interface DashboardCard {
+interface ShortcutCard {
+  label: string;
+  description: string;
   href: string;
-  title: string;
-  desc: string;
   adminOnly?: boolean;
+  soon?: boolean;
 }
 
-const CARDS: DashboardCard[] = [
-  {
-    href: "/pacientes",
-    title: "Pacientes",
-    desc: "Cadastro e prontuário dos pacientes.",
-  },
-  {
-    href: "/configuracoes",
-    title: "Configurações",
-    desc: "Dados, contato, endereço, horário e logo.",
-  },
-  {
-    href: "/servicos",
-    title: "Serviços",
-    desc: "Procedimentos oferecidos pela clínica.",
-  },
-  {
-    href: "/usuarios",
-    title: "Equipe",
-    desc: "Membros da clínica e seus acessos.",
-  },
-  {
-    href: "/permissoes",
-    title: "Permissões",
-    desc: "Matriz de acessos da equipe.",
-    adminOnly: true,
-  },
+const SHORTCUTS: ShortcutCard[] = [
+  { label: "Pacientes", description: "Cadastros, perfis e prontuários", href: "/pacientes" },
+  { label: "Agenda", description: "Visão semanal e novos agendamentos", href: "/agenda", soon: true },
+  { label: "Aprovações", description: "Solicitações do app do cliente", href: "/aprovacoes", soon: true },
+  { label: "Serviços", description: "Catálogo de procedimentos", href: "/servicos" },
+  { label: "Equipe", description: "Profissionais e recepcionistas", href: "/usuarios", adminOnly: true },
+  { label: "Configurações", description: "Dados da clínica e horários", href: "/configuracoes", adminOnly: true },
+  { label: "Permissões", description: "Matriz de permissões da equipe", href: "/permissoes", adminOnly: true },
 ];
+
+function getSaudacao(): string {
+  const h = new Date().getHours();
+  if (h < 12) return "Bom dia";
+  if (h < 18) return "Boa tarde";
+  return "Boa noite";
+}
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
-  const isAdmin = user?.tipo === "admin";
-  const visibleCards = CARDS.filter((c) => !c.adminOnly || isAdmin);
+  if (!user) redirect("/login");
+  if (user.tipo === "cliente") redirect("/cliente/home");
+
+  const kpis = await getDashboardKPIs();
+
+  const visibleCards = SHORTCUTS.filter(
+    (c) => !c.adminOnly || user.tipo === "admin"
+  );
+
+  const primeiroNome = user.nome_completo?.split(" ")[0] ?? "";
 
   return (
-    <div
-      style={{
-        padding: "32px clamp(20px, 4vw, 48px)",
-        maxWidth: 880,
-        margin: "0 auto",
-      }}
-    >
-      <header style={{ marginBottom: 28 }}>
-        <h1
-          style={{
-            fontFamily: "var(--font-head)",
-            fontSize: 32,
-            fontWeight: 700,
-            letterSpacing: "-0.03em",
-            margin: 0,
-          }}
-        >
-          Bem-vindo à AGN Estética
+    <div className={styles.wrapper}>
+      <header className={styles.header}>
+        <h1 className={styles.title}>
+          {getSaudacao()}
+          {primeiroNome ? `, ${primeiroNome}` : ""}.
         </h1>
-        <p style={{ fontSize: 14.5, color: "var(--ink-3)", marginTop: 6 }}>
-          Placeholder do dashboard. Em breve: agenda, pacientes, atendimentos.
+        <p className={styles.subtitle}>
+          Aqui está um resumo da clínica.
         </p>
       </header>
 
-      <div
-        style={{
-          display: "grid",
-          gap: 16,
-          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-        }}
-      >
-        {visibleCards.map((c) => (
-          <Link
-            key={c.href}
-            href={c.href}
-            className="agn-card agn-card--pad"
-            style={{
-              textDecoration: "none",
-              color: "var(--ink)",
-              display: "block",
-            }}
-          >
-            <h2
-              style={{
-                fontFamily: "var(--font-head)",
-                fontSize: 18,
-                fontWeight: 700,
-                margin: 0,
-              }}
-            >
-              {c.title}
-            </h2>
-            <p
-              style={{
-                fontSize: 13,
-                color: "var(--ink-3)",
-                marginTop: 6,
-                marginBottom: 0,
-              }}
-            >
-              {c.desc}
-            </p>
-          </Link>
-        ))}
-      </div>
+      <DashboardKPIs kpis={kpis} />
+
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>Atalhos</h2>
+        <div className={styles.shortcuts}>
+          {visibleCards.map((c) =>
+            c.soon ? (
+              <div key={c.href} className={styles.shortcutItem}>
+                <Card>
+                  <div className={`${styles.shortcut} ${styles.shortcutSoon}`}>
+                    <span className={styles.shortcutLabel}>{c.label}</span>
+                    <span className={styles.shortcutDesc}>{c.description}</span>
+                    <span className={styles.shortcutSoonBadge}>Em breve</span>
+                  </div>
+                </Card>
+              </div>
+            ) : (
+              <Link key={c.href} href={c.href} className={styles.shortcutLink}>
+                <Card>
+                  <div className={styles.shortcut}>
+                    <span className={styles.shortcutLabel}>{c.label}</span>
+                    <span className={styles.shortcutDesc}>{c.description}</span>
+                  </div>
+                </Card>
+              </Link>
+            )
+          )}
+        </div>
+      </section>
     </div>
   );
 }
