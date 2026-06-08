@@ -12,3 +12,4 @@ export { PhotoSlot } from "./PhotoSlot";
 export { Pill } from "./Pill";
 export { Toggle } from "./Toggle";
 export { PhoneShell } from "./PhoneShell";
+export { Skeleton, SkeletonRows } from "./Skeleton";

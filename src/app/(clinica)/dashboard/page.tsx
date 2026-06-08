@@ -47,13 +47,16 @@ export default async function DashboardPage() {
   return (
     <div className={styles.wrapper}>
       <header className={styles.header}>
-        <h1 className={styles.title}>
-          {getSaudacao()}
-          {primeiroNome ? `, ${primeiroNome}` : ""}.
-        </h1>
-        <p className={styles.subtitle}>
-          Aqui está um resumo da clínica.
-        </p>
+        <div className={styles.headerTop}>
+          <div>
+            <h1 className={styles.title}>
+              {getSaudacao()}
+              {primeiroNome ? `, ${primeiroNome}` : ""}.
+            </h1>
+            <p className={styles.subtitle}>Aqui está um resumo da clínica.</p>
+          </div>
+          <a href="/dashboard/hoje" className={styles.toggleBtn}>Versão Hoje →</a>
+        </div>
       </header>
 
       <DashboardKPIs kpis={kpis} />

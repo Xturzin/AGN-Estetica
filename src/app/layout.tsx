@@ -1,6 +1,7 @@
 import { Hanken_Grotesk } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import "@/frontend/styles/tokens.css";
+import { Toaster } from "react-hot-toast";
 
 const hankenGrotesk = Hanken_Grotesk({
   subsets: ["latin"],
@@ -38,10 +39,22 @@ export default function RootLayout({
 
   return (
     <html lang="pt-BR">
-      <body className={`${hankenGrotesk.variable} agn`}>
-        {children}
-        {gaId ? <GoogleAnalytics gaId={gaId} /> : null}
-      </body>
+      <body>
+  {children}
+  <Toaster
+    position="top-center"
+    toastOptions={{
+      duration: 3500,
+      style: {
+        background: "var(--ink)",
+        color: "#fff",
+        borderRadius: 12,
+        fontSize: 14,
+        padding: "12px 16px",
+      },
+    }}
+  />
+</body>
     </html>
   );
 }
