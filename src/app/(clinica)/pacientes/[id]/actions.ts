@@ -8,7 +8,17 @@ import {
   type EvolucaoInsert,
   type TipoEvolucao,
 } from "@/backend/services/evolucaoService";
+import {
+  uploadFoto,
+  type TipoFoto,
+} from "@/backend/services/fotoClinicaService";
+import {
+  uploadDocumento,
+  type TipoDocumento,
+} from "@/backend/services/documentoService";
 import type { EvolucaoFormResult } from "@/frontend/components/clinica/EvolucaoTimeline";
+import type { FotoUploadResult } from "@/frontend/components/clinica/FotoGallery";
+import type { DocumentoUploadResult } from "@/frontend/components/clinica/DocumentoList";
 
 const TIPOS_VALIDOS: TipoEvolucao[] = [
   "consulta",
@@ -82,4 +92,83 @@ export async function updateEvolucaoAction(
 
   revalidatePath(`/pacientes/${pacienteId}`);
   return { success: "Evolução atualizada." };
+}
+
+// ===== Foto clínica =====
+
+const TIPOS_FOTO_VALIDOS: TipoFoto[] = ["antes", "durante", "depois"];
+
+export async function uploadFotoAction(
+  pacienteId: string,
+  formData: FormData
+): Promise<FotoUploadResult> {
+  const user = await requirePermission("editar_prontuario");
+
+  const tipo = String(formData.get("tipo") ?? "") as TipoFoto;
+  const descricao = String(formData.get("descricao") ?? "").trim() || null;
+  const file = formData.get("file");
+
+  if (!TIPOS_FOTO_VALIDOS.includes(tipo)) return { error: "Tipo inválido." };
+  if (!(file instanceof File)) return { error: "Arquivo ausente." };
+
+  const buffer = await file.arrayBuffer();
+  const ext = file.name.split(".").pop()?.toLowerCase() ?? "webp";
+
+  const { error } = await uploadFoto({
+    paciente_id: pacienteId,
+    tipo,
+    descricao,
+    enviado_por: user.id,
+    fileBuffer: buffer,
+    contentType: file.type || "image/webp",
+    fileExt: ext,
+  });
+
+  if (error) return { error: `Erro ao enviar: ${error.message}` };
+
+  revalidatePath(`/pacientes/${pacienteId}`);
+  return { success: "Foto enviada." };
+}
+
+// ===== Documento =====
+
+const TIPOS_DOC_VALIDOS: TipoDocumento[] = [
+  "termo_consentimento",
+  "exame",
+  "receita",
+  "outro",
+];
+
+export async function uploadDocumentoAction(
+  pacienteId: string,
+  formData: FormData
+): Promise<DocumentoUploadResult> {
+  const user = await requirePermission("editar_prontuario");
+
+  const tipo = String(formData.get("tipo") ?? "") as TipoDocumento;
+  const nome = String(formData.get("nome") ?? "").trim();
+  const file = formData.get("file");
+
+  if (!TIPOS_DOC_VALIDOS.includes(tipo)) return { error: "Tipo inválido." };
+  if (!nome) return { error: "Nome é obrigatório." };
+  if (!(file instanceof File)) return { error: "Arquivo ausente." };
+
+  const buffer = await file.arrayBuffer();
+  const ext = file.name.split(".").pop()?.toLowerCase() ?? "bin";
+
+  const { error } = await uploadDocumento({
+    paciente_id: pacienteId,
+    tipo,
+    nome,
+    enviado_por: user.id,
+    fileBuffer: buffer,
+    contentType: file.type || "application/octet-stream",
+    fileSize: file.size,
+    fileExt: ext,
+  });
+
+  if (error) return { error: `Erro ao enviar: ${error.message}` };
+
+  revalidatePath(`/pacientes/${pacienteId}`);
+  return { success: "Documento enviado." };
 }

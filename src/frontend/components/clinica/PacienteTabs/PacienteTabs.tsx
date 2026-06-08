@@ -6,10 +6,20 @@ import type { ReactNode } from "react";
 import { Card, Icon } from "@/frontend/components/ui";
 import type { Paciente } from "@/backend/services/pacienteService";
 import type { EvolucaoComAutor } from "@/backend/services/evolucaoService";
+import type { FotoComUrl } from "@/backend/services/fotoClinicaService";
+import type { DocumentoComUrl } from "@/backend/services/documentoService";
 import {
   EvolucaoTimeline,
   type EvolucaoFormResult,
 } from "@/frontend/components/clinica/EvolucaoTimeline";
+import {
+  FotoGallery,
+  type FotoUploadResult,
+} from "@/frontend/components/clinica/FotoGallery";
+import {
+  DocumentoList,
+  type DocumentoUploadResult,
+} from "@/frontend/components/clinica/DocumentoList";
 import styles from "./PacienteTabs.module.css";
 
 const TABS = [
@@ -23,17 +33,25 @@ const TABS = [
 interface PacienteTabsProps {
   paciente: Paciente;
   evolucoes: EvolucaoComAutor[];
+  fotos: FotoComUrl[];
+  documentos: DocumentoComUrl[];
   canEditProntuario: boolean;
   createEvolucaoAction: (formData: FormData) => Promise<EvolucaoFormResult>;
   updateEvolucaoAction: (formData: FormData) => Promise<EvolucaoFormResult>;
+  uploadFotoAction: (formData: FormData) => Promise<FotoUploadResult>;
+  uploadDocumentoAction: (formData: FormData) => Promise<DocumentoUploadResult>;
 }
 
 export function PacienteTabs({
   paciente,
   evolucoes,
+  fotos,
+  documentos,
   canEditProntuario,
   createEvolucaoAction,
   updateEvolucaoAction,
+  uploadFotoAction,
+  uploadDocumentoAction,
 }: PacienteTabsProps) {
   const sp = useSearchParams();
   const activeId = sp.get("aba") ?? "resumo";
@@ -98,17 +116,17 @@ export function PacienteTabs({
           />
         )}
         {activeId === "fotos" && (
-          <PlaceholderView
-            title="Fotos clínicas"
-            description="Galeria antes/durante/depois por sessão, com compressão automática."
-            comingIn="2.5"
+          <FotoGallery
+            fotos={fotos}
+            canEdit={canEditProntuario}
+            uploadAction={uploadFotoAction}
           />
         )}
         {activeId === "documentos" && (
-          <PlaceholderView
-            title="Documentos"
-            description="Termos de consentimento, exames e PDFs do paciente."
-            comingIn="2.6"
+          <DocumentoList
+            documentos={documentos}
+            canEdit={canEditProntuario}
+            uploadAction={uploadDocumentoAction}
           />
         )}
       </div>
@@ -185,25 +203,6 @@ function ResumoItem({
   );
 }
 
-function PlaceholderView({
-  title,
-  description,
-  comingIn,
-}: {
-  title: string;
-  description: string;
-  comingIn: string;
-}) {
-  return (
-    <Card>
-      <div className={styles.placeholder}>
-        <h3 className={styles.placeholderTitle}>{title}</h3>
-        <p className={styles.placeholderDesc}>{description}</p>
-        <span className={styles.placeholderBadge}>Sub-etapa {comingIn}</span>
-      </div>
-    </Card>
-  );
-}
 
 function formatDate(d: string | null | undefined): string | null {
   if (!d) return null;
