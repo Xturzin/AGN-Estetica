@@ -1,21 +1,10 @@
-import { getCurrentUser } from "@/backend/lib/auth/session";
-import { logoutAction } from "@/backend/services/authActions";
-import { Button } from "@/frontend/components/ui";
-
-export default async function ClinicaDashboardPage() {
-  const user = await getCurrentUser();
+export default function ClienteHomePage() {
   return (
-    <main style={{ padding: 40 }}>
-      <h1>Dashboard da Clínica</h1>
-      <p>
-        Logado como: <strong>{user?.nome_completo}</strong> ({user?.email})
+    <div style={{ padding: 20 }}>
+      <h1 style={{ fontFamily: "var(--font-head)", fontSize: 24, margin: "0 0 8px" }}>Início</h1>
+      <p style={{ color: "var(--ink-3)", fontSize: 14 }}>
+        Em construção — chegará na Sub 4.2.
       </p>
-      <p>Tipo: {user?.tipo}</p>
-      <form action={logoutAction} style={{ marginTop: 24 }}>
-        <Button type="submit" variant="ghost">
-          Sair
-        </Button>
-      </form>
-    </main>
+    </div>
   );
 }
