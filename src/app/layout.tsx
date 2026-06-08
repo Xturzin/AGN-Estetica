@@ -1,7 +1,7 @@
 import { Hanken_Grotesk } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
-import "@/frontend/styles/tokens.css";
 import { Toaster } from "react-hot-toast";
+import "@/frontend/styles/tokens.css";
 
 const hankenGrotesk = Hanken_Grotesk({
   subsets: ["latin"],
@@ -36,25 +36,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
-
   return (
     <html lang="pt-BR">
-      <body>
-  {children}
-  <Toaster
-    position="top-center"
-    toastOptions={{
-      duration: 3500,
-      style: {
-        background: "var(--ink)",
-        color: "#fff",
-        borderRadius: 12,
-        fontSize: 14,
-        padding: "12px 16px",
-      },
-    }}
-  />
-</body>
+      <body className={`${hankenGrotesk.variable} agn`}>
+        {children}
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            duration: 3500,
+            style: {
+              background: "var(--ink)",
+              color: "#fff",
+              borderRadius: 12,
+              fontSize: 14,
+              padding: "12px 16px",
+            },
+          }}
+        />
+        {gaId ? <GoogleAnalytics gaId={gaId} /> : null}
+      </body>
     </html>
   );
 }
