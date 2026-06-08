@@ -1,0 +1,1 @@
+export { ClientePerfilView } from "./ClientePerfilView";

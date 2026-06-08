@@ -1,0 +1,1 @@
+export { ClienteHomeView } from "./ClienteHomeView";

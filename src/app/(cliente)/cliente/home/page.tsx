@@ -1,10 +1,33 @@
-export default function ClienteHomePage() {
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/backend/lib/auth/session";
+import {
+  getPacienteDoUsuario,
+  getProximoAgendamento,
+} from "@/backend/services/clienteContextService";
+import { listServicosAtivosSimples } from "@/backend/services/agendamentoService";
+import { ClienteHomeView } from "@/frontend/components/cliente/ClienteHomeView";
+
+export default async function ClienteHomePage() {
+  const user = await getCurrentUser();
+  if (!user) redirect("/cliente/login");
+  if (user.tipo !== "cliente") redirect("/dashboard");
+
+  const paciente = await getPacienteDoUsuario(user.id);
+  if (!paciente) {
+    return (
+      <div style={{ padding: 24, textAlign: "center", color: "var(--ink-3)" }}>
+        <h2>Conta não vinculada</h2>
+        <p>Entre em contato com a clínica.</p>
+      </div>
+    );
+  }
+
+  const [proximo, servicos] = await Promise.all([
+    getProximoAgendamento(paciente.id),
+    listServicosAtivosSimples(),
+  ]);
+
   return (
-    <div style={{ padding: 20 }}>
-      <h1 style={{ fontFamily: "var(--font-head)", fontSize: 24, margin: "0 0 8px" }}>Início</h1>
-      <p style={{ color: "var(--ink-3)", fontSize: 14 }}>
-        Em construção — chegará na Sub 4.2.
-      </p>
-    </div>
+    <ClienteHomeView paciente={paciente} proximo={proximo} servicos={servicos} />
   );
 }

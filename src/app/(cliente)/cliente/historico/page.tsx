@@ -1,10 +1,22 @@
-export default function ClienteHistoricoPage() {
-  return (
-    <div style={{ padding: 20 }}>
-      <h1 style={{ fontFamily: "var(--font-head)", fontSize: 24, margin: "0 0 8px" }}>Histórico</h1>
-      <p style={{ color: "var(--ink-3)", fontSize: 14 }}>
-        Em construção — chegará na Sub 4.3.
-      </p>
-    </div>
-  );
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/backend/lib/auth/session";
+import { getPacienteDoUsuario } from "@/backend/services/clienteContextService";
+import { listEvolucoesPaciente } from "@/backend/services/evolucaoService";
+import { listFotosPaciente } from "@/backend/services/fotoClinicaService";
+import { ClienteHistoricoView } from "@/frontend/components/cliente/ClienteHistoricoView";
+
+export default async function ClienteHistoricoPage() {
+  const user = await getCurrentUser();
+  if (!user) redirect("/cliente/login");
+  if (user.tipo !== "cliente") redirect("/dashboard");
+
+  const paciente = await getPacienteDoUsuario(user.id);
+  if (!paciente) redirect("/cliente/home");
+
+  const [evolucoes, fotos] = await Promise.all([
+    listEvolucoesPaciente(paciente.id),
+    listFotosPaciente(paciente.id),
+  ]);
+
+  return <ClienteHistoricoView evolucoes={evolucoes} fotos={fotos} />;
 }
