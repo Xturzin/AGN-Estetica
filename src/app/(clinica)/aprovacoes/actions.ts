@@ -5,7 +5,22 @@ import { requirePermission } from "@/backend/lib/auth/permissions";
 import { getAprovacao, resolverAprovacao } from "@/backend/services/aprovacaoService";
 import { createAgendamento } from "@/backend/services/agendamentoService";
 import { criarNotificacao } from "@/backend/services/notificacaoService";
+import {
+  emailSolicitacaoAprovada,
+  emailSolicitacaoRecusada,
+} from "@/backend/services/emailService";
+import { createAdminSupabaseClient } from "@/backend/lib/supabase/admin";
 import type { AprovacaoActionResult } from "@/frontend/components/clinica/AprovacaoList";
+
+async function getEmailDoSolicitante(solicitante_id: string): Promise<{ email: string | null; nome: string }> {
+  const admin = createAdminSupabaseClient();
+  const { data } = await admin
+    .from("usuarios")
+    .select("email, nome_completo")
+    .eq("id", solicitante_id)
+    .single();
+  return { email: data?.email ?? null, nome: data?.nome_completo ?? "" };
+}
 
 export async function aprovarAction(formData: FormData): Promise<AprovacaoActionResult> {
   const user = await requirePermission("aprovar_solicitacoes");
@@ -55,6 +70,17 @@ export async function aprovarAction(formData: FormData): Promise<AprovacaoAction
     dados: { aprovacao_id: id, agendamento_id: agendamentoId },
   });
 
+  const { email, nome } = await getEmailDoSolicitante(aprovacao.solicitante_id);
+  if (email) {
+    const d = (aprovacao.dados ?? {}) as Record<string, unknown>;
+    await emailSolicitacaoAprovada({
+      destinatario: email,
+      paciente_nome: nome,
+      servico_nome: String(d.servico_nome ?? "Serviço"),
+      data_hora: new Date(String(d.data_hora_preferida ?? d.data_hora ?? Date.now())),
+    });
+  }
+
   revalidatePath("/aprovacoes");
   revalidatePath("/agenda");
   return { success: "Aprovado." };
@@ -79,6 +105,11 @@ export async function recusarAction(formData: FormData): Promise<AprovacaoAction
     corpo: "Sua solicitação não pôde ser atendida pela clínica.",
     dados: { aprovacao_id: id },
   });
+
+  const { email, nome } = await getEmailDoSolicitante(aprovacao.solicitante_id);
+  if (email) {
+    await emailSolicitacaoRecusada({ destinatario: email, paciente_nome: nome });
+  }
 
   revalidatePath("/aprovacoes");
   return { success: "Recusada." };

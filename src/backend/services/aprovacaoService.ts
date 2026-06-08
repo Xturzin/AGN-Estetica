@@ -40,6 +40,54 @@ export async function getAprovacao(id: string): Promise<Aprovacao | null> {
   return data;
 }
 
+interface CriarSolicitacaoParams {
+  solicitante_id: string;
+  paciente_id: string;
+  profissional_id: string;
+  servico_id: string;
+  servico_nome: string;
+  data_hora_preferida: string;
+  duracao_minutos: number;
+  observacoes: string | null;
+}
+
+export async function criarSolicitacaoAgendamento(
+  params: CriarSolicitacaoParams
+): Promise<{ data: Aprovacao | null; error: { message: string } | null }> {
+  const supabase = createServerSupabaseClient();
+  const { data, error } = await supabase
+    .from("aprovacoes")
+    .insert({
+      tipo: "solicitacao_agendamento",
+      status: "pendente",
+      solicitante_id: params.solicitante_id,
+      dados: {
+        paciente_id: params.paciente_id,
+        profissional_id: params.profissional_id,
+        servico_id: params.servico_id,
+        servico_nome: params.servico_nome,
+        data_hora_preferida: params.data_hora_preferida,
+        duracao_minutos: params.duracao_minutos,
+        observacoes: params.observacoes,
+      },
+    })
+    .select()
+    .single();
+
+  if (error) return { data: null, error: { message: error.message } };
+  return { data, error: null };
+}
+
+export async function listUsuariosQueAprovam(): Promise<{ id: string; email: string | null; nome_completo: string }[]> {
+  const supabase = createServerSupabaseClient();
+  const { data } = await supabase
+    .from("usuarios")
+    .select("id, email, nome_completo")
+    .in("tipo", ["admin", "recepcionista"])
+    .eq("ativo", true);
+  return data ?? [];
+}
+
 export async function resolverAprovacao(
   id: string,
   status: "aprovado" | "recusado",

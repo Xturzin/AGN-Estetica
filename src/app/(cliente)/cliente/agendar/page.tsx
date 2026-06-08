@@ -1,10 +1,27 @@
-export default function ClienteAgendarPage() {
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/backend/lib/auth/session";
+import {
+  listProfissionaisAtivos,
+  listServicosAtivosSimples,
+} from "@/backend/services/agendamentoService";
+import { ClienteAgendarView } from "@/frontend/components/cliente/ClienteAgendarView";
+import { solicitarAgendamentoAction } from "./actions";
+
+export default async function ClienteAgendarPage() {
+  const user = await getCurrentUser();
+  if (!user) redirect("/cliente/login");
+  if (user.tipo !== "cliente") redirect("/dashboard");
+
+  const [servicos, profissionais] = await Promise.all([
+    listServicosAtivosSimples(),
+    listProfissionaisAtivos(),
+  ]);
+
   return (
-    <div style={{ padding: 20 }}>
-      <h1 style={{ fontFamily: "var(--font-head)", fontSize: 24, margin: "0 0 8px" }}>Agendar</h1>
-      <p style={{ color: "var(--ink-3)", fontSize: 14 }}>
-        Em construção — chegará na Sub 4.5.
-      </p>
-    </div>
+    <ClienteAgendarView
+      servicos={servicos}
+      profissionais={profissionais}
+      solicitarAction={solicitarAgendamentoAction}
+    />
   );
 }

@@ -1,0 +1,1 @@
+export { ClienteAgendarView } from "./ClienteAgendarView";
