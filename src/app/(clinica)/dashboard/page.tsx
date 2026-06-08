@@ -16,7 +16,7 @@ interface ShortcutCard {
 
 const SHORTCUTS: ShortcutCard[] = [
   { label: "Pacientes", description: "Cadastros, perfis e prontuários", href: "/pacientes" },
-  { label: "Agenda", description: "Visão semanal e novos agendamentos", href: "/agenda", soon: true },
+  { label: "Agenda", description: "Visão semanal e novos agendamentos", href: "/agenda" },
   { label: "Aprovações", description: "Solicitações do app do cliente", href: "/aprovacoes", soon: true },
   { label: "Serviços", description: "Catálogo de procedimentos", href: "/servicos" },
   { label: "Equipe", description: "Profissionais e recepcionistas", href: "/usuarios", adminOnly: true },
