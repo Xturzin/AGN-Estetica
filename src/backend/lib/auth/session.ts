@@ -41,7 +41,7 @@ export function isClinicTeam(tipo: TipoUsuario): boolean {
 export function getDefaultRouteForTipo(tipo: TipoUsuario): string {
   switch (tipo) {
     case "admin":
-      return "/admin/dashboard";
+      return "/dashboard";
     case "profissional":
     case "recepcionista":
       return "/dashboard";
