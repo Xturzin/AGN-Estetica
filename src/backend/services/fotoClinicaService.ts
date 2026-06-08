@@ -50,6 +50,7 @@ export async function listFotosPaciente(
 
 interface UploadFotoParams {
   paciente_id: string;
+  atendimento_id?: string | null;
   tipo: TipoFoto;
   descricao: string | null;
   enviado_por: string;
@@ -87,9 +88,10 @@ export async function uploadFoto(
   // 2. Cria registro na tabela
   const insert: FotoClinicaInsert = {
     paciente_id: params.paciente_id,
+    atendimento_id: params.atendimento_id ?? null,
     tipo: params.tipo,
-    storage_path: storagePath,
     descricao: params.descricao,
+    storage_path: storagePath,
     enviado_por: params.enviado_por,
   };
 

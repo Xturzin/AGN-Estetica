@@ -22,10 +22,11 @@ interface AgendaSemanalProps {
   pacientes: PacienteRef[];
   profissionais: ProfissionalRef[];
   servicos: ServicoRef[];
-  semanaInicio: string; // ISO date YYYY-MM-DD
+  semanaInicio: string;
   createAction: (formData: FormData) => Promise<AgendamentoFormResult>;
   updateAction: (formData: FormData) => Promise<AgendamentoFormResult>;
   cancelarAction: (formData: FormData) => Promise<AgendamentoFormResult>;
+  iniciarAtendimentoAction: (formData: FormData) => Promise<AgendamentoFormResult>;
 }
 
 const HORA_INICIO = 7;
@@ -71,6 +72,7 @@ export function AgendaSemanal({
   createAction,
   updateAction,
   cancelarAction,
+  iniciarAtendimentoAction,
 }: AgendaSemanalProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -205,6 +207,16 @@ export function AgendaSemanal({
     } else {
       setEditTarget(null);
     }
+  }
+
+  async function handleIniciar() {
+    if (!editTarget) return;
+    setSaving(true);
+    const formData = new FormData();
+    formData.set("id", editTarget.id);
+    const result = await iniciarAtendimentoAction(formData);
+    setSaving(false);
+    if (result.error) setFormError(result.error);
   }
 
   const agendamentosFiltrados = agendamentos.filter((a) => {
@@ -380,6 +392,7 @@ export function AgendaSemanal({
             onSubmit={handleEdit}
             onClose={() => setEditTarget(null)}
             onCancelar={handleCancelar}
+            onIniciar={handleIniciar}
             saving={saving}
             error={formError}
           />
@@ -399,6 +412,7 @@ interface AgendamentoFormProps {
   onSubmit: (e: FormEvent<HTMLFormElement>) => void;
   onClose: () => void;
   onCancelar?: () => void;
+  onIniciar?: () => void;
   saving: boolean;
   error: string | null;
 }
@@ -413,6 +427,7 @@ function AgendamentoForm({
   onSubmit,
   onClose,
   onCancelar,
+  onIniciar,
   saving,
   error,
 }: AgendamentoFormProps) {
@@ -540,6 +555,12 @@ function AgendamentoForm({
             Cancelar agendamento
           </Button>
         )}
+        {kind === "edit" && onIniciar && target &&
+          (target.status === "agendado" || target.status === "confirmado") && (
+            <Button type="button" onClick={onIniciar} disabled={saving}>
+              Iniciar atendimento
+            </Button>
+          )}
         <div className={styles.footerSpacer} />
         <Button type="button" variant="ghost" onClick={onClose} disabled={saving}>Fechar</Button>
         <Button type="submit" disabled={saving}>{saving ? "Salvando..." : "Salvar"}</Button>

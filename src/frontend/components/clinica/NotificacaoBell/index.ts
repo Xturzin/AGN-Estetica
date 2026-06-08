@@ -1,0 +1,1 @@
+export { NotificacaoBell } from "./NotificacaoBell";

@@ -11,6 +11,7 @@ import {
   createAgendamentoAction,
   updateAgendamentoAction,
   cancelarAgendamentoAction,
+  iniciarAtendimentoFromAgendaAction,
 } from "./actions";
 
 interface PageProps {
@@ -65,6 +66,7 @@ export default async function AgendaPage({ searchParams }: PageProps) {
         createAction={createAgendamentoAction}
         updateAction={updateAgendamentoAction}
         cancelarAction={cancelarAgendamentoAction}
+        iniciarAtendimentoAction={iniciarAtendimentoFromAgendaAction}
       />
     </div>
   );

@@ -1,13 +1,17 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/backend/lib/auth/session";
+import { requirePermission } from "@/backend/lib/auth/permissions";
 import {
   createAgendamento,
   updateAgendamento,
   cancelarAgendamento,
+  getAgendamento,
   type StatusAgendamento,
 } from "@/backend/services/agendamentoService";
+import { iniciarAtendimento } from "@/backend/services/atendimentoService";
 import type { AgendamentoFormResult } from "@/frontend/components/clinica/AgendaSemanal";
 
 const STATUS_VALIDOS: StatusAgendamento[] = [
@@ -119,4 +123,28 @@ export async function cancelarAgendamentoAction(
 
   revalidatePath("/agenda");
   return { success: "Agendamento cancelado." };
+}
+
+export async function iniciarAtendimentoFromAgendaAction(
+  formData: FormData
+): Promise<AgendamentoFormResult> {
+  await requirePermission("iniciar_atendimento");
+
+  const agendamentoId = String(formData.get("id") ?? "").trim();
+  if (!agendamentoId) return { error: "ID ausente." };
+
+  const ag = await getAgendamento(agendamentoId);
+  if (!ag) return { error: "Agendamento não encontrado." };
+
+  const { data, error } = await iniciarAtendimento({
+    paciente_id: ag.paciente_id,
+    profissional_id: ag.profissional_id,
+    servico_id: ag.servico_id,
+    agendamento_id: ag.id,
+  });
+
+  if (error || !data) return { error: error?.message ?? "Erro." };
+
+  revalidatePath("/agenda");
+  redirect(`/atendimento/${data.id}`);
 }

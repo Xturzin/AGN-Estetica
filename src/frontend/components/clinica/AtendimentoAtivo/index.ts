@@ -1,0 +1,1 @@
+export { AtendimentoAtivo } from "./AtendimentoAtivo";
