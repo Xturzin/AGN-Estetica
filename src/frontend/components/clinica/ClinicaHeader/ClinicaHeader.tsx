@@ -34,11 +34,12 @@ export async function ClinicaHeader() {
           )}
           {isAdmin && (
             <>
-              <Link href="/admin/dashboard" className={styles.navLink}>Dashboard</Link>
+              <Link href="/dashboard" className={styles.navLink}>Dashboard</Link>
               <Link href="/agenda" className={styles.navLink}>Agenda</Link>
+              <Link href="/aprovacoes" className={styles.navLink}>Aprovações</Link>
               <Link href="/pacientes" className={styles.navLink}>Pacientes</Link>
-              <Link href="/admin/usuarios" className={styles.navLink}>Equipe</Link>
-              <Link href="/admin/configuracoes" className={styles.navLink}>Config</Link>
+              <Link href="/usuarios" className={styles.navLink}>Equipe</Link>
+              <Link href="/configuracoes" className={styles.navLink}>Config</Link>
             </>
           )}
         </nav>
