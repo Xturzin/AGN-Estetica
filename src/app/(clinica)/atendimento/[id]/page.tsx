@@ -53,8 +53,8 @@ export default async function AtendimentoPage({ params }: PageProps) {
   return (
     <div style={{ padding: "32px clamp(20px, 4vw, 48px)", maxWidth: 1000, margin: "0 auto" }}>
       <AtendimentoAtivo
-      atendimento={atendimento}
-      anamnese={anamnese}
+        atendimento={atendimento}
+        anamnese={anamnese}
         evolucoes={evolucoesDesteAtendimento}
         fotos={fotosDesteAtendimento}
         createEvolucaoAction={createEvolucaoBound}
