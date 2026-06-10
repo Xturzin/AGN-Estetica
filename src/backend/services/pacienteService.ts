@@ -26,6 +26,11 @@ export async function listPacientes(): Promise<Paciente[]> {
   return data ?? [];
 }
 
+// Alias para compatibilidade
+export async function getPaciente(id: string): Promise<Paciente | null> {
+  return getPacienteById(id);
+}
+
 export async function getPacienteById(id: string): Promise<Paciente | null> {
   const supabase = createServerSupabaseClient();
   const { data } = await supabase
