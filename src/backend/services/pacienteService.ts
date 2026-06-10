@@ -78,6 +78,17 @@ export async function updatePaciente(id: string, input: PacienteUpdate): Promise
   return { data, error: null };
 }
 
+// Alias para compatibilidade — ativar/desativar paciente (soft delete bidirecional)
+export async function setPacienteAtivo(id: string, ativo: boolean): Promise<{ error: { message: string } | null }> {
+  const supabase = createServerSupabaseClient();
+  const { error } = await supabase
+    .from("pacientes")
+    .update({ ativo })
+    .eq("id", id);
+  if (error) return { error: { message: error.message } };
+  return { error: null };
+}
+
 export async function softDeletePaciente(id: string): Promise<{ error: { message: string } | null }> {
   const supabase = createServerSupabaseClient();
   const { error } = await supabase
