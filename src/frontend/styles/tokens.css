@@ -16,49 +16,75 @@
    ============================================================ */
 
 :root {
-  /* ink (text) */
-  --ink: #161a23;
-  --ink-2: #474d59;
-  --ink-3: #828995;
-  --ink-4: #aeb4c0;
+  /* ====================
+     NOVOS TOKENS DE COR
+     ==================== */
+     
+  /* Surfaces */
+  --bg: #F8F9FB;
+  --surface: #FFFFFF;
+  --surface-2: #F3F4F6;
+  --surface-3: #E5E7EB;
 
-  /* surfaces */
-  --bg: #eaeef3;
-  --surface: #ffffff;
-  --surface-2: #f5f7fa;
-  --surface-3: #eef1f6;
+  /* Ink (textos) */
+  --ink: #111827;
+  --ink-2: #4B5563;
+  --ink-3: #9CA3AF;
+  --ink-4: #E5E7EB;
 
-  /* lines */
+  /* Brand */
+  --brand: #3B82F6;
+  --brand-deep: #2563EB;
+  --brand-tint: #DBEAFE;
+
+  /* Status */
+  --success: #10B981;
+  --success-tint: #D1FAE5;
+  --warn: #F59E0B;
+  --warn-tint: #FEF3C7;
+  --danger: #EF4444;
+  --danger-tint: #FEE2E2;
+
+  /* ====================
+     TOKENS ANTIGOS MANTIDOS / MAPEADOS PARA COMPATIBILIDADE
+     ==================== */
+
+  /* Lines */
   --line: rgba(22, 26, 35, 0.07);
   --line-2: rgba(22, 26, 35, 0.12);
 
-  /* accent — cobalt */
-  --accent: #1f6dff;
-  --accent-deep: #1357d6;
-  --accent-soft: #7aa6f5;
-  --accent-tint: #e9f0ff;
-  --accent-tint-2: #d3e2ff;
-  --accent-shadow: 31, 109, 255; /* rgb triplet para box-shadows */
+  /* Accent -> Apontando para o novo Brand */
+  --accent: var(--brand);
+  --accent-deep: var(--brand-deep);
+  --accent-soft: #7aa6f5; 
+  --accent-tint: var(--brand-tint);
+  --accent-tint-2: #d3e2ff; 
+  --accent-shadow: 59, 130, 246; /* RGB de #3B82F6 para a sombra do botão primário */
 
-  /* status */
-  --ok: #17946b;        --ok-tint: #e4f5ee;    --ok-ink: #137256;
-  --warn: #c2873a;      --warn-tint: #f7eedd;  --warn-ink: #9a6a2a;
-  --info: #5a63d6;      --info-tint: #eceeff;  --info-ink: #4248b8;
-  --muted-tint: #eef1f6; --muted-ink: #828995;
+  /* Status legados -> Apontando para os novos Status */
+  --ok: var(--success);        
+  --ok-tint: var(--success-tint);    
+  --ok-ink: #065F46; /* Ajustado para combinar com o novo verde */
+  --warn-ink: #92400E; /* Ajustado para combinar com o novo laranja */
+  --info: var(--brand);        
+  --info-tint: var(--brand-tint);    
+  --info-ink: var(--brand-deep);
+  --muted-tint: var(--surface-3); 
+  --muted-ink: var(--ink-3);
 
-  /* radii */
+  /* Radii */
   --r-xs: 9px;
   --r-sm: 11px;
   --r-md: 16px;
   --r-lg: 22px;
   --r-xl: 28px;
 
-  /* shadows */
+  /* Shadows */
   --shadow-sm: 0 1px 2px rgba(30, 45, 80, .05), 0 4px 14px rgba(30, 45, 80, .05);
   --shadow: 0 2px 6px rgba(30, 45, 80, .05), 0 16px 38px rgba(30, 45, 80, .08);
   --shadow-lg: 0 4px 12px rgba(30, 45, 80, .06), 0 30px 70px rgba(30, 45, 80, .12);
 
-  /* type — Hanken Grotesk via next/font (--font-hanken vem do layout) */
+  /* Type */
   --font-head: var(--font-hanken), -apple-system, system-ui, sans-serif;
   --font-body: var(--font-hanken), -apple-system, system-ui, sans-serif;
   --font-num: var(--font-hanken), -apple-system, system-ui, sans-serif;
@@ -66,11 +92,17 @@
 }
 
 * { box-sizing: border-box; }
-body { margin: 0; background: var(--bg); }
+
+body { 
+  margin: 0; 
+  background: var(--bg); 
+  color: var(--ink);
+}
 
 .agn {
   font-family: var(--font-body);
   color: var(--ink);
+  background: var(--bg);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   line-height: 1.45;

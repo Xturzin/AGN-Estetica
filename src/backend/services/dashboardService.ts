@@ -106,3 +106,104 @@ export async function getDashboardHoje(): Promise<DashboardHojeData> {
     concluidos,
   };
 }
+
+import type { AprovacaoComSolicitante } from "@/backend/services/aprovacaoService";
+
+export interface DashboardCompletoData {
+  kpis: {
+    atendimentosHoje: number;
+    proximas24h: number;
+    novosPacientesMes: number;
+    aprovacoesPendentes: number;
+  };
+  agendaHoje: AgendamentoComRefs[];
+  aprovacoes: AprovacaoComSolicitante[];
+}
+
+export async function getDashboardCompleto(): Promise<DashboardCompletoData> {
+  const supabase = createServerSupabaseClient();
+  const agora = new Date();
+  const inicioHoje = new Date(agora);
+  inicioHoje.setHours(0, 0, 0, 0);
+  const fimHoje = new Date(inicioHoje);
+  fimHoje.setDate(fimHoje.getDate() + 1);
+
+  const proximas24h = new Date(agora.getTime() + 24 * 60 * 60 * 1000);
+
+  const inicioMes = new Date(agora.getFullYear(), agora.getMonth(), 1).toISOString();
+
+  // Agenda hoje
+  const { data: ags } = await supabase
+    .from("agendamentos")
+    .select("*")
+    .gte("data_hora_inicio", inicioHoje.toISOString())
+    .lt("data_hora_inicio", fimHoje.toISOString())
+    .order("data_hora_inicio")
+    .limit(7);
+
+  const agendaHoje = await Promise.all(
+    (ags ?? []).map(async (a) => {
+      const [pacRes, profRes, servRes] = await Promise.all([
+        supabase.from("pacientes").select("id, nome_completo").eq("id", a.paciente_id).single(),
+        supabase.from("usuarios").select("id, nome_completo, cor_agenda").eq("id", a.profissional_id).single(),
+        supabase.from("servicos").select("id, nome, duracao_minutos, cor").eq("id", a.servico_id).single(),
+      ]);
+      return { ...a, paciente: pacRes.data, profissional: profRes.data, servico: servRes.data };
+    })
+  );
+
+  // Contagens
+  const { count: atendimentosHoje } = await supabase
+    .from("atendimentos")
+    .select("*", { count: "exact", head: true })
+    .gte("data_hora_inicio", inicioHoje.toISOString())
+    .lt("data_hora_inicio", fimHoje.toISOString());
+
+  const { count: proximas24hCount } = await supabase
+    .from("agendamentos")
+    .select("*", { count: "exact", head: true })
+    .gte("data_hora_inicio", agora.toISOString())
+    .lt("data_hora_inicio", proximas24h.toISOString())
+    .in("status", ["agendado", "confirmado"]);
+
+  const { count: novosPacientesMes } = await supabase
+    .from("pacientes")
+    .select("*", { count: "exact", head: true })
+    .gte("created_at", inicioMes)
+    .eq("ativo", true);
+
+  const { count: aprovCount } = await supabase
+    .from("aprovacoes")
+    .select("*", { count: "exact", head: true })
+    .eq("status", "pendente");
+
+  // Aprovações com solicitante
+  const { data: aprovs } = await supabase
+    .from("aprovacoes")
+    .select("*")
+    .eq("status", "pendente")
+    .order("created_at", { ascending: false })
+    .limit(3);
+
+  const aprovacoes = await Promise.all(
+    (aprovs ?? []).map(async (a) => {
+      const { data: solic } = await supabase
+        .from("usuarios")
+        .select("id, nome_completo")
+        .eq("id", a.solicitante_id)
+        .single();
+      return { ...a, solicitante: solic } as AprovacaoComSolicitante;
+    })
+  );
+
+  return {
+    kpis: {
+      atendimentosHoje: atendimentosHoje ?? 0,
+      proximas24h: proximas24hCount ?? 0,
+      novosPacientesMes: novosPacientesMes ?? 0,
+      aprovacoesPendentes: aprovCount ?? 0,
+    },
+    agendaHoje: agendaHoje as AgendamentoComRefs[],
+    aprovacoes,
+  };
+}

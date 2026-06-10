@@ -1,0 +1,1 @@
+export { ClinicaTopBar } from "./ClinicaTopBar";

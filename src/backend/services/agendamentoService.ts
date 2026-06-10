@@ -28,6 +28,7 @@ export interface ServicoRef {
   nome: string;
   duracao_minutos: number;
   cor: string | null;
+  preco?: number | null;
 }
 
 export async function listAgendamentosSemana(
@@ -118,7 +119,7 @@ export async function listServicosAtivosSimples(): Promise<ServicoRef[]> {
   const supabase = createServerSupabaseClient();
   const { data } = await supabase
     .from("servicos")
-    .select("id, nome, duracao_minutos, cor")
+    .select("id, nome, duracao_minutos, cor, preco")
     .eq("ativo", true)
     .order("nome");
   return data ?? [];

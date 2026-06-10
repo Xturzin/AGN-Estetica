@@ -1,0 +1,1 @@
+export { PacientesView } from "./PacientesView";

@@ -1,127 +1,336 @@
-.wrapper { display: flex; flex-direction: column; gap: 28px; padding: 24px 20px 16px; }
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px 20px 16px;
+}
 
-.header { display: flex; flex-direction: column; gap: 2px; }
-.saudacao { font-size: 14px; color: var(--ink-3); }
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.saudacao {
+  font-size: 14px;
+  color: var(--ink-3);
+  display: block;
+  margin-bottom: 2px;
+}
+
 .nome {
   font-family: var(--font-head);
-  font-size: 26px;
+  font-size: 30px;
   font-weight: 700;
   letter-spacing: -0.02em;
   color: var(--ink);
   margin: 0;
 }
 
-.section { display: flex; flex-direction: column; gap: 12px; }
-.sectionTitle {
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--ink-3);
-  margin: 0;
+.belBtn {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid var(--ink-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  color: var(--ink);
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.belDot {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--brand);
+  border: 2px solid var(--surface);
 }
 
 .proximoCard {
-  background: var(--accent-tint);
-  border-radius: 16px;
-  padding: 18px 20px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
+  background: linear-gradient(135deg, #2563EB 0%, #3B82F6 100%);
+  border-radius: 20px;
+  padding: 24px;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
 }
 
-.proximoDateBox {
-  background: var(--surface);
-  border-radius: 12px;
-  padding: 10px 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 64px;
+.proximoCard::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.12) 1px, transparent 0);
+  background-size: 20px 20px;
+  pointer-events: none;
 }
 
-.proximoDia {
+.proximoTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  position: relative;
+}
+
+.proximoLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  opacity: 0.85;
+}
+
+.proximoStatus {
+  padding: 4px 12px;
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.proximoTitulo {
   font-family: var(--font-head);
   font-size: 28px;
   font-weight: 700;
-  color: var(--ink);
-  line-height: 1;
+  letter-spacing: -0.02em;
+  margin: 0 0 14px;
+  position: relative;
 }
 
-.proximoMes {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--ink-3);
-  margin-top: 4px;
-}
-
-.proximoInfo { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
-.proximoData { font-size: 13px; color: var(--ink-3); text-transform: capitalize; }
-.proximoHora { font-size: 14px; font-weight: 600; color: var(--ink); }
-.proximoServico { font-size: 14px; color: var(--ink); margin-top: 4px; }
-.proximoProf { font-size: 12.5px; color: var(--ink-3); }
-
-.empty {
-  background: var(--surface-2);
-  border-radius: 16px;
-  padding: 24px 20px;
-  text-align: center;
+.proximoMeta {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
+  gap: 16px;
+  margin-bottom: 20px;
+  position: relative;
 }
 
-.empty p { margin: 0; font-size: 14px; color: var(--ink-3); }
-
-.emptyBtn {
-  padding: 10px 18px;
-  background: var(--accent-deep);
-  color: #fff;
-  border-radius: 999px;
+.proximoMetaItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 13.5px;
+  font-weight: 500;
+}
+
+.proximoActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  position: relative;
+}
+
+.btnPrimary {
+  padding: 12px;
+  background: #fff;
+  color: var(--brand-deep);
+  border-radius: 12px;
+  font-size: 14px;
   font-weight: 600;
+  text-align: center;
   text-decoration: none;
 }
 
-.acoesGrid {
+.btnGhost {
+  padding: 12px;
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+}
+
+.emptyCard {
+  background: var(--surface-2);
+  border-radius: 20px;
+  padding: 28px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.emptyLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+}
+
+.emptyText {
+  font-size: 14px;
+  color: var(--ink-2);
+  margin: 4px 0 12px;
+}
+
+.emptyCard .btnPrimary {
+  background: var(--brand);
+  color: #fff;
+}
+
+.acoes {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
 }
 
 .acaoCard {
-  background: var(--surface-2);
-  border-radius: 14px;
-  padding: 18px;
+  background: var(--surface);
+  border: 1px solid var(--ink-4);
+  border-radius: 16px;
+  padding: 16px 8px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
   text-decoration: none;
   color: var(--ink);
-  font-weight: 600;
-  font-size: 13.5px;
-  border: 1px solid var(--ink-4);
 }
 
-.acaoCard:hover { background: var(--accent-tint); }
+.acaoCard:hover { background: var(--surface-2); }
 
-.servicosList { display: flex; flex-direction: column; gap: 8px; }
-
-.servicoItem {
+.acaoIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--brand-tint);
+  color: var(--brand-deep);
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
-  background: var(--surface-2);
-  border-radius: 12px;
+  justify-content: center;
 }
 
-.servicoDot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.acaoLabel {
+  font-size: 13px;
+  font-weight: 600;
+}
 
-.servicoBody { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
-.servicoNome { font-size: 14px; font-weight: 500; color: var(--ink); }
-.servicoDuracao { font-size: 12px; color: var(--ink-3); }
+.servicosSec {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.servicosHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.servicosTitle {
+  font-family: var(--font-head);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin: 0;
+}
+
+.linkVerTodos {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--brand);
+  text-decoration: none;
+}
+
+.servicosScroll {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  margin: 0 -20px;
+  padding: 4px 20px 12px;
+  scrollbar-width: none;
+}
+
+.servicosScroll::-webkit-scrollbar { display: none; }
+
+.servicoCard {
+  flex: 0 0 200px;
+  background: var(--surface);
+  border: 1px solid var(--ink-4);
+  border-radius: 16px;
+  overflow: hidden;
+  text-decoration: none;
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+}
+
+.servicoFoto {
+  height: 120px;
+  background: var(--surface-2);
+  background-image: repeating-linear-gradient(45deg, var(--surface-2), var(--surface-2) 10px, var(--surface-3) 10px, var(--surface-3) 20px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.servicoFotoLabel {
+  font-size: 11px;
+  color: var(--ink-3);
+  background: rgba(255,255,255,0.7);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.servicoBody {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.servicoNome {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.servicoMeta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
+.servicoFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.servicoPreco {
+  font-family: var(--font-head);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.servicoPreco small {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink-3);
+  margin-right: 2px;
+}
+
+.servicoBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--brand);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

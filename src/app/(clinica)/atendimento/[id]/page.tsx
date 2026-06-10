@@ -5,6 +5,7 @@ import { getAtendimentoComRefs } from "@/backend/services/atendimentoService";
 import { listEvolucoesPaciente } from "@/backend/services/evolucaoService";
 import { listFotosPaciente } from "@/backend/services/fotoClinicaService";
 import { AtendimentoAtivo } from "@/frontend/components/clinica/AtendimentoAtivo";
+import { getAnamnese } from "@/backend/services/anamneseService";
 import {
   createEvolucaoNoAtendimentoAction,
   uploadFotoNoAtendimentoAction,
@@ -23,6 +24,7 @@ export default async function AtendimentoPage({ params }: PageProps) {
 
   const atendimento = await getAtendimentoComRefs(params.id);
   if (!atendimento) notFound();
+  const anamnese = await getAnamnese(atendimento.paciente_id);
 
   const [todasEvolucoes, todasFotos] = await Promise.all([
     listEvolucoesPaciente(atendimento.paciente_id),
@@ -51,7 +53,8 @@ export default async function AtendimentoPage({ params }: PageProps) {
   return (
     <div style={{ padding: "32px clamp(20px, 4vw, 48px)", maxWidth: 1000, margin: "0 auto" }}>
       <AtendimentoAtivo
-        atendimento={atendimento}
+      atendimento={atendimento}
+      anamnese={anamnese}
         evolucoes={evolucoesDesteAtendimento}
         fotos={fotosDesteAtendimento}
         createEvolucaoAction={createEvolucaoBound}
