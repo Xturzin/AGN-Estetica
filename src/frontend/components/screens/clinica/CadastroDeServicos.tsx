@@ -77,6 +77,14 @@ export function CadastroDeServicos({ user, aprovacoesPendentes, clinicaNome }: {
               <Field label="Duração" icon="clock" placeholder="45 min" />
               <Field label="Valor (R$)" placeholder="220,00" />
             </div>
+            <div className="field">
+              <span className="label">Profissionais habilitados</span>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                <span className="chip chip-active">Dra. Helena</span>
+                <span className="chip">Camila R.</span>
+                <span className="chip">+ Júlia M.</span>
+              </div>
+            </div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: 8, marginTop: 4, borderTop: "1px solid var(--line)" }}>
               <div>
                 <div style={{ fontSize: 13, fontWeight: 600 }}>Disponível online</div>
