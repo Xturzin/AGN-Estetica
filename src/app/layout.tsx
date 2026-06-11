@@ -28,6 +28,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
   return (
     <html lang="pt-BR">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body className={hankenGrotesk.variable}>
         {children}
         <Toaster position="top-center" toastOptions={{ duration: 3500, style: { background: "var(--ink)", color: "#fff", borderRadius: 12, fontSize: 14, padding: "12px 16px" } }} />

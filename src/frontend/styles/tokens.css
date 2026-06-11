@@ -1,9 +1,6 @@
 /* AGN Estética — tokens & utility classes (sistema do protótipo)
-   Fonte Hanken Grotesk carregada via @import (Google Fonts CDN) para garantir
-   aplicação mesmo se next/font falhar (cache PWA, etc).
+   Fonte: Hanken Grotesk carregada via <link> no layout.tsx + next/font.
 */
-
-@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700;800&display=swap');
 
 :root {
   /* ink */
@@ -49,8 +46,8 @@
   --shadow-lg: 0 4px 12px rgba(30, 45, 80, .06), 0 30px 70px rgba(30, 45, 80, .12);
 
   /* type */
-  --serif: var(--font-hanken), "Hanken Grotesk", -apple-system, system-ui, sans-serif;
-  --sans: var(--font-hanken), "Hanken Grotesk", -apple-system, system-ui, sans-serif;
+  --serif: "Hanken Grotesk", var(--font-hanken), -apple-system, system-ui, sans-serif;
+  --sans: "Hanken Grotesk", var(--font-hanken), -apple-system, system-ui, sans-serif;
 
   /* compat com o que o backend antigo ainda referencia */
   --brand: var(--accent);
@@ -63,7 +60,12 @@
 }
 
 * { box-sizing: border-box; }
-body { margin: 0; font-family: var(--sans); background: var(--bg); color: var(--ink); }
+body {
+  margin: 0;
+  font-family: "Hanken Grotesk", var(--font-hanken), -apple-system, system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+}
 
 .es * { box-sizing: border-box; }
 .es {
