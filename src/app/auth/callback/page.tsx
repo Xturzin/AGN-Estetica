@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { Suspense, useEffect, useState, type FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createBrowserSupabaseClient } from "@/backend/lib/supabase/browser";
 import { Button, Input, Logo } from "@/frontend/components/ui";
@@ -17,7 +17,7 @@ type SubmissionState =
   | { type: "error"; message: string }
   | { type: "success" };
 
-export default function AuthCallbackPage() {
+function CallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const next = searchParams.get("next") ?? "/login";
@@ -33,7 +33,6 @@ export default function AuthCallbackPage() {
     const refresh_token = params.get("refresh_token");
 
     if (!access_token || !refresh_token) {
-      // Talvez já esteja autenticado (refresh da página)?
       supabase.auth.getSession().then(({ data }) => {
         if (data.session) {
           setInit({ type: "ready" });
@@ -54,7 +53,6 @@ export default function AuthCallbackPage() {
           setInit({ type: "error", message: error.message });
         } else {
           setInit({ type: "ready" });
-          // Limpa hash da URL pra evitar reuso do token
           window.history.replaceState(
             null,
             "",
@@ -71,10 +69,7 @@ export default function AuthCallbackPage() {
     const confirmPassword = String(formData.get("confirm_password") ?? "");
 
     if (password.length < 8) {
-      setSubmission({
-        type: "error",
-        message: "Senha deve ter pelo menos 8 caracteres.",
-      });
+      setSubmission({ type: "error", message: "Senha deve ter pelo menos 8 caracteres." });
       return;
     }
     if (password !== confirmPassword) {
@@ -172,5 +167,22 @@ export default function AuthCallbackPage() {
         </form>
       </div>
     </div>
+  );
+}
+
+export default function AuthCallbackPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className={styles.container}>
+          <div className={styles.box}>
+            <Logo size={20} />
+            <p className={styles.muted}>Carregando...</p>
+          </div>
+        </div>
+      }
+    >
+      <CallbackContent />
+    </Suspense>
   );
 }

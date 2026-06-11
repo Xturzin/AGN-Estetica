@@ -14,7 +14,6 @@ export const metadata = {
   title: "AGN Estética",
   description: "Sistema de gestão clínica e app do paciente.",
   manifest: "/manifest.json",
-  themeColor: "#1f6dff",
 };
 
 export const viewport = {
