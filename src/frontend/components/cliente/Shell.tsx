@@ -55,10 +55,26 @@ export function PhoneShell({ children, bg = "var(--surface-2)", statusDark = fal
   children: React.ReactNode; bg?: string; statusDark?: boolean; noTabs?: boolean; pad?: number;
 }) {
   return (
-    <div className="es" style={{ height: "100vh", display: "flex", flexDirection: "column", background: bg, position: "relative" }}>
-      <StatusBar dark={statusDark} />
-      <div className="scrolly" style={{ flex: 1, padding: pad, position: "relative" }}>{children}</div>
-      {!noTabs && <TabBar />}
+    <div style={{
+      minHeight: "100vh",
+      display: "flex",
+      justifyContent: "center",
+      background: "#1a1d22",
+    }}>
+      <div className="es" style={{
+        width: "100%",
+        maxWidth: 440,
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        background: bg,
+        position: "relative",
+        boxShadow: "0 0 60px rgba(0,0,0,.25)",
+      }}>
+        <StatusBar dark={statusDark} />
+        <div className="scrolly" style={{ flex: 1, padding: pad, position: "relative" }}>{children}</div>
+        {!noTabs && <TabBar />}
+      </div>
     </div>
   );
 }
