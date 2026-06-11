@@ -28,7 +28,7 @@ export default async function Page() {
     <DashboardPrincipal
       user={{ name: user.nome_completo ?? "Usuário", role: user.tipo === "admin" ? "Administradora" : user.tipo === "profissional" ? "Profissional" : "Recepcionista" }}
       saudacao={saudacao()}
-      primeiroNome={(user.nome_completo ?? "").split(" ")[0]}
+      primeiroNome={pegarPrimeiroNome(user.nome_completo)}
       data={dataExtensa()}
       aprovacoesPendentes={pendentes ?? 0}
       clinicaNome={clinica?.nome ?? "Clínica"}

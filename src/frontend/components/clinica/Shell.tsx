@@ -72,7 +72,7 @@ export function Sidebar({ aprovacoesPendentes = 0, clinicaNome = "Clínica" }: {
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontSize: 13, fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{clinicaNome}</div>
-            <div style={{ fontSize: 11, color: "var(--ink-3)" }}>Sistema interno</div>
+            <div style={{ fontSize: 11, color: "var(--ink-3)" }}>Clínica · ativa</div>
           </div>
           <Icon name="chevronDown" size={15} color="var(--ink-4)" />
         </div>

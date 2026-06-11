@@ -58,12 +58,24 @@ export function DashboardPrincipal({ user, saudacao, primeiroNome, data, aprovac
             <div className="card card-pad">
               <CardHead
                 title="Aprovações pendentes"
-                action={<span className="pill pill-warn"><span className="dot" />{aprovacoesPendentes} novas</span>}
+                action={
+                  aprovacoesPendentes > 0
+                    ? <span className="pill pill-warn"><span className="dot" />{aprovacoesPendentes} {aprovacoesPendentes === 1 ? "nova" : "novas"}</span>
+                    : <span className="pill pill-muted"><span className="dot" />nenhuma</span>
+                }
                 icon="calendarCheck"
               />
-              <ApprovalRow n="Carolina Esteves" s="Limpeza de pele" when="amanhã, 10h" />
-              <ApprovalRow n="Patrícia Nunes" s="Massagem modeladora" when="seg, 14h" />
-              <ApprovalRow n="Fernanda Reis" s="Peeling de diamante" when="ter, 16h" last />
+              {aprovacoesPendentes === 0 ? (
+                <p style={{ fontSize: 13, color: "var(--ink-3)", padding: "20px 0", textAlign: "center" }}>
+                  Sem solicitações pendentes no momento.
+                </p>
+              ) : (
+                <>
+                  <ApprovalRow n="Carolina Esteves" s="Limpeza de pele" when="amanhã, 10h" />
+                  <ApprovalRow n="Patrícia Nunes" s="Massagem modeladora" when="seg, 14h" />
+                  <ApprovalRow n="Fernanda Reis" s="Peeling de diamante" when="ter, 16h" last />
+                </>
+              )}
             </div>
           </div>
         </div>
