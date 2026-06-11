@@ -15,6 +15,16 @@ function dataExtensa(): string {
   return `${dias[d.getDay()]}, ${d.getDate()} DE ${meses[d.getMonth()]}`;
 }
 
+function pegarPrimeiroNome(nome: string | null | undefined): string {
+  if (!nome) return "Usuário";
+  const palavras = nome.split(" ").filter(Boolean);
+  const titulos = ["dra.", "dr.", "sra.", "sr.", "dra", "dr"];
+  for (const palavra of palavras) {
+    if (!titulos.includes(palavra.toLowerCase())) return palavra;
+  }
+  return palavras[0] ?? "Usuário";
+}
+
 export default async function Page() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
