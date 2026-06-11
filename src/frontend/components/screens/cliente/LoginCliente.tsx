@@ -24,8 +24,13 @@ export function LoginCliente({ loginAction }: LoginClienteProps) {
     fd.set("identifier", email);
     fd.set("password", senha);
     const result = await loginAction(fd);
-    if (result.error) { setErro(result.error); setLoading(false); }
-    else router.refresh();
+    if (result.error) {
+      setErro(result.error);
+      setLoading(false);
+    } else {
+      router.push("/cliente/home");
+      router.refresh();
+    }
   }
 
   return (
@@ -45,7 +50,7 @@ export function LoginCliente({ loginAction }: LoginClienteProps) {
 
             {erro && <div style={{ padding: "10px 14px", background: "#fde6e6", color: "#c64545", borderRadius: 10, fontSize: 13 }}>{erro}</div>}
 
-            <Btn variant="primary" size="lg" block>{loading ? "Entrando..." : "Entrar"}</Btn>
+            <Btn variant="primary" size="lg" block type="submit">{loading ? "Entrando..." : "Entrar"}</Btn>
           </form>
         </div>
 

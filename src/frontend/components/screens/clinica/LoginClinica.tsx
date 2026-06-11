@@ -27,6 +27,7 @@ export function LoginClinica({ loginAction }: LoginClinicaProps) {
       setErro(result.error);
       setLoading(false);
     } else {
+      router.push("/dashboard");
       router.refresh();
     }
   }
@@ -71,7 +72,7 @@ export function LoginClinica({ loginAction }: LoginClinicaProps) {
               </div>
             )}
 
-            <Btn variant="primary" size="lg" block>
+            <Btn variant="primary" size="lg" block type="submit">
               {loading ? "Entrando..." : "Entrar"}
             </Btn>
           </form>
