@@ -9,7 +9,7 @@ import {
   setPacienteAtivo,
   type PacienteInsert,
 } from "@/backend/services/pacienteService";
-import type { PacienteFormResult } from "@/frontend/components/clinica/PacienteList";
+import type { PacienteFormResult } from "@/frontend/lib/form-types";
 
 async function requireClinicTeam() {
   const user = await getCurrentUser();

@@ -10,7 +10,7 @@ import {
   emailSolicitacaoRecusada,
 } from "@/backend/services/emailService";
 import { createAdminSupabaseClient } from "@/backend/lib/supabase/admin";
-import type { AprovacaoActionResult } from "@/frontend/components/clinica/AprovacaoList";
+import type { AprovacaoActionResult } from "@/frontend/lib/form-types";
 
 async function getEmailDoSolicitante(solicitante_id: string): Promise<{ email: string | null; nome: string }> {
   const admin = createAdminSupabaseClient();

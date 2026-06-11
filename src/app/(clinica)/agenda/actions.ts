@@ -12,7 +12,7 @@ import {
   type StatusAgendamento,
 } from "@/backend/services/agendamentoService";
 import { iniciarAtendimento } from "@/backend/services/atendimentoService";
-import type { AgendamentoFormResult } from "@/frontend/components/clinica/AgendaSemanal";
+import type { AgendamentoFormResult } from "@/frontend/lib/form-types";
 
 const STATUS_VALIDOS: StatusAgendamento[] = [
   "agendado",

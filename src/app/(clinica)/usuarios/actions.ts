@@ -10,7 +10,7 @@ import {
   type TipoUsuario,
   type UsuarioUpdate,
 } from "@/backend/services/usuarioService";
-import type { UsuarioFormResult } from "@/frontend/components/clinica/UsuarioList";
+import type { UsuarioFormResult } from "@/frontend/lib/form-types";
 
 const TIPOS_VALIDOS: TipoUsuario[] = ["profissional", "recepcionista"];
 const USERNAME_REGEX = /^[a-z0-9._-]+$/;

@@ -1,21 +1,17 @@
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/backend/lib/auth/session";
 import { createServerSupabaseClient } from "@/backend/lib/supabase/server";
-import { listProfissionaisAtivos } from "@/backend/services/agendamentoService";
-import { ServicosView } from "@/frontend/components/clinica/ServicosView";
-import { createServicoAction, toggleServicoAction } from "./actions";
+import { CadastroDeServicos } from "@/frontend/components/screens/clinica/CadastroDeServicos";
 
-export default async function ServicosPage() {
+export default async function Page() {
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
   const supabase = createServerSupabaseClient();
-  const [{ data: servicos }, profissionais] = await Promise.all([
-    supabase.from("servicos").select("*").order("nome"),
-    listProfissionaisAtivos(),
-  ]);
-
-  return (
-    <ServicosView
-      servicos={servicos ?? []}
-      profissionais={profissionais}
-      createAction={createServicoAction}
-      toggleAction={toggleServicoAction}
-    />
-  );
+  const { count: pendentes } = await supabase.from("aprovacoes").select("*", { count: "exact", head: true }).eq("status", "pendente");
+  const { data: clinica } = await supabase.from("clinica").select("nome").limit(1).maybeSingle();
+  return <CadastroDeServicos
+    user={{ name: user.nome_completo ?? "Usuário", role: user.tipo }}
+    aprovacoesPendentes={pendentes ?? 0}
+    clinicaNome={clinica?.nome ?? "Clínica"}
+  />;
 }

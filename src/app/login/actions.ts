@@ -1,7 +1,7 @@
 "use server";
 
 import { signIn } from "@/backend/services/authService";
-import type { LoginActionResult } from "@/frontend/components/auth/LoginForm";
+import type { LoginActionResult } from "@/frontend/lib/form-types";
 
 export async function loginClinica(
   _prev: LoginActionResult,
@@ -12,4 +12,12 @@ export async function loginClinica(
     String(formData.get("password") ?? ""),
     ["admin", "profissional", "recepcionista"]
   );
+}
+
+export async function loginAction(formData: FormData): Promise<{ error?: string }> {
+  const result = await loginClinica({ error: null } as unknown as LoginActionResult, formData);
+  if (result && (result as { error?: string | null }).error) {
+    return { error: String((result as { error: string }).error) };
+  }
+  return {};
 }

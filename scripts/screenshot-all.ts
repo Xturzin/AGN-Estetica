@@ -36,9 +36,18 @@ async function screenshot(page: Page, key: string) {
   capturedKeys.add(key);
   const filename = `${slugify(key)}.png`;
   const filepath = path.join(SCREENSHOTS_DIR, filename);
-  await page.screenshot({ path: filepath, fullPage: true });
-  captured++;
-  console.log(`  [${String(captured).padStart(2, "0")}] ${filename}`);
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      await page.waitForTimeout(300);
+      await page.screenshot({ path: filepath, fullPage: true });
+      captured++;
+      console.log(`  [${String(captured).padStart(2, "0")}] ${filename}`);
+      return;
+    } catch (e) {
+      if (attempt === 3) console.warn(`  [SKIP] ${filename} — ${e instanceof Error ? e.message.split("\n")[0] : String(e)}`);
+      else await page.waitForTimeout(600);
+    }
+  }
 }
 
 async function waitReady(page: Page, timeout = 12000) {
@@ -49,7 +58,9 @@ async function waitReady(page: Page, timeout = 12000) {
 }
 
 async function goto(page: Page, route: string) {
-  await page.goto(`${BASE_URL}${route}`, { waitUntil: "domcontentloaded", timeout: 20000 });
+  await page.goto(`${BASE_URL}${route}`, { waitUntil: "domcontentloaded", timeout: 30000 }).catch(() =>
+    page.goto(`${BASE_URL}${route}`, { waitUntil: "commit", timeout: 15000 }).catch(() => {})
+  );
   await waitReady(page);
 }
 
@@ -155,49 +166,60 @@ async function captureClinicaPages(context: BrowserContext) {
   // Pacientes - lista
   await goto(page, "/pacientes");
   await screenshot(page, "/pacientes");
-  await tryClickModal(page, ["Novo paciente", "Novo", "Adicionar", "Cadastrar"], "/pacientes--modal-novo");
 
-  // Paciente - detalhe (via primeiro link da lista)
-  const pacienteLink = page.locator('a[href*="/pacientes/"]').first();
-  if (await pacienteLink.isVisible({ timeout: 3000 }).catch(() => false)) {
-    const href = await pacienteLink.getAttribute("href") ?? "";
-    const pacienteId = href.replace(BASE_URL, "").split("?")[0];
-
-    await goto(page, pacienteId);
-    await screenshot(page, pacienteId);
-
-    // Abas do paciente
-    const tabs = await page.locator('[role="tab"]').all();
-    for (const tab of tabs) {
-      try {
-        const label = (await tab.textContent() ?? "").trim().replace(/\s+/g, "-").toLowerCase();
-        if (!label) continue;
-        await tab.click();
-        await page.waitForTimeout(600);
-        await screenshot(page, `${pacienteId}--aba-${label}`);
-      } catch {}
-    }
-
-    // Anamnese
-    const anamneseRoute = `${pacienteId}/anamnese`;
-    await goto(page, anamneseRoute);
-    await screenshot(page, anamneseRoute);
-
-    // Steps da anamnese (até 8 passos)
-    for (let step = 2; step <= 8; step++) {
-      const nextBtn = page.locator('button:has-text("Próximo"), button:has-text("Avançar"), button:has-text("Continuar")').first();
-      if (!(await nextBtn.isVisible({ timeout: 1200 }).catch(() => false))) break;
-      await nextBtn.click();
-      await page.waitForTimeout(700);
-      await screenshot(page, `${anamneseRoute}--step-${step}`);
+  // Pré-captura de link de paciente real (UUID) antes de navegar para novo
+  const uuidLinkLocators = await page.locator('a[href*="/pacientes/"]').all();
+  let pacienteDetalheRoute: string | null = null;
+  for (const loc of uuidLinkLocators) {
+    const href = await loc.getAttribute("href").catch(() => "");
+    const segment = (href ?? "").replace(BASE_URL, "").split("?")[0];
+    if (/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i.test(segment)) {
+      pacienteDetalheRoute = segment;
+      break;
     }
   }
 
-  // Atendimentos (via links encontrados em qualquer página)
+  // Paciente - detalhe (via UUID coletado acima)
+  if (pacienteDetalheRoute) {
+    await goto(page, pacienteDetalheRoute);
+    await screenshot(page, pacienteDetalheRoute);
+
+    // Anamnese do paciente existente (stepper multi-step — navega via StepperNav)
+    const anamneseRoute = `${pacienteDetalheRoute}/anamnese`;
+    await goto(page, anamneseRoute);
+    // Aguarda hidratação do client component
+    await page.waitForSelector("nav button", { timeout: 8000 }).catch(() => {});
+    await page.waitForTimeout(500);
+    await screenshot(page, anamneseRoute);
+    const navButtons = await page.locator("nav button").all();
+    for (let i = 1; i < navButtons.length; i++) {
+      try {
+        await navButtons[i].click();
+        await page.waitForTimeout(600);
+        await screenshot(page, `${anamneseRoute}--step-${i + 1}`);
+      } catch {}
+    }
+
+    // Atendimentos do paciente (links na página de detalhe)
+    await goto(page, pacienteDetalheRoute);
+    await waitReady(page);
+    const atendLinks = await page.locator('a[href*="/atendimento/"]').all();
+    for (const link of atendLinks.slice(0, 2)) {
+      const href = await link.getAttribute("href").catch(() => "");
+      const route = (href ?? "").replace(BASE_URL, "").split("?")[0];
+      if (!route) continue;
+      await goto(page, route);
+      await screenshot(page, route);
+    }
+  }
+
+  // Atendimentos (fallback: busca no dashboard)
+  await goto(page, "/dashboard");
+  await waitReady(page);
   const atendimentoLinks = await page.locator('a[href*="/atendimento/"]').all();
-  for (const link of atendimentoLinks.slice(0, 3)) {
-    const href = await link.getAttribute("href") ?? "";
-    const route = href.replace(BASE_URL, "").split("?")[0];
+  for (const link of atendimentoLinks.slice(0, 2)) {
+    const href = await link.getAttribute("href").catch(() => "");
+    const route = (href ?? "").replace(BASE_URL, "").split("?")[0];
     if (!route) continue;
     await goto(page, route);
     await screenshot(page, route);

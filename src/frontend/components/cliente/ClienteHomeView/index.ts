@@ -1,1 +1,0 @@
-export { ClienteHomeView } from "./ClienteHomeView";

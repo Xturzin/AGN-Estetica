@@ -1,1 +1,0 @@
-export { DashboardCompleto } from "./DashboardCompleto";

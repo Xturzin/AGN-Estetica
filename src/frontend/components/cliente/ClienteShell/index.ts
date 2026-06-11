@@ -1,1 +1,0 @@
-export { ClienteShell } from "./ClienteShell";

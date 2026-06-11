@@ -14,12 +14,7 @@ export const metadata = {
   title: "AGN Estética",
   description: "Sistema de gestão clínica e app do paciente.",
   manifest: "/manifest.json",
-  themeColor: "#E0B7AC",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default" as const,
-    title: "AGN",
-  },
+  themeColor: "#1f6dff",
 };
 
 export const viewport = {
@@ -27,32 +22,16 @@ export const viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: "#E0B7AC",
+  themeColor: "#1f6dff",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
   return (
     <html lang="pt-BR">
-      <body className={`${hankenGrotesk.variable} agn`}>
+      <body className={hankenGrotesk.variable}>
         {children}
-        <Toaster
-          position="top-center"
-          toastOptions={{
-            duration: 3500,
-            style: {
-              background: "var(--ink)",
-              color: "#fff",
-              borderRadius: 12,
-              fontSize: 14,
-              padding: "12px 16px",
-            },
-          }}
-        />
+        <Toaster position="top-center" toastOptions={{ duration: 3500, style: { background: "var(--ink)", color: "#fff", borderRadius: 12, fontSize: 14, padding: "12px 16px" } }} />
         {gaId ? <GoogleAnalytics gaId={gaId} /> : null}
       </body>
     </html>

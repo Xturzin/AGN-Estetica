@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { requirePermission } from "@/backend/lib/auth/permissions";
 import { upsertAnamnese } from "@/backend/services/anamneseService";
-import type { AnamneseSaveResult } from "@/frontend/components/clinica/AnamneseStepper";
+import type { AnamneseSaveResult } from "@/frontend/lib/form-types";
 
 const SECOES_VALIDAS = [
   "dados_gerais",

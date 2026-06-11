@@ -1,1 +1,0 @@
-export { ClienteHistoricoView } from "./ClienteHistoricoView";

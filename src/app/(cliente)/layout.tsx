@@ -1,12 +1,9 @@
-import type { ReactNode } from "react";
-import { requireClient } from "@/backend/lib/auth/session";
-import { ClienteShell } from "@/frontend/components/cliente/ClienteShell";
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/backend/lib/auth/session";
 
-export default async function ClienteLayout({ children }: { children: ReactNode }) {
-  await requireClient();
-  return (
-  <ClienteShell>
-    {children}
-  </ClienteShell>
-);
+export default async function ClienteLayout({ children }: { children: React.ReactNode }) {
+  const user = await getCurrentUser();
+  if (!user) redirect("/cliente/login");
+  if (user.tipo !== "cliente") redirect("/dashboard");
+  return <>{children}</>;
 }

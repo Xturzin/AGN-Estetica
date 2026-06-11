@@ -1,15 +1,2 @@
-export { cx } from "./cx";
-export { Avatar } from "./Avatar";
-export { Button } from "./Button";
-export { Card } from "./Card";
-export { CardHead } from "./CardHead";
-export { Chip } from "./Chip";
-export { Icon, type IconName } from "./Icon";
-export { IconButton } from "./IconButton";
-export { Input } from "./Input";
-export { Logo } from "./Logo";
-export { PhotoSlot } from "./PhotoSlot";
-export { Pill } from "./Pill";
-export { Toggle } from "./Toggle";
-export { PhoneShell } from "./PhoneShell";
-export { Skeleton, SkeletonRows } from "./Skeleton";
+export { Icon, ICONS } from "./Icon";
+export * from "./primitives";

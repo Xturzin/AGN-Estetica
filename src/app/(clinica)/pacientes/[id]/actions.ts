@@ -16,9 +16,9 @@ import {
   uploadDocumento,
   type TipoDocumento,
 } from "@/backend/services/documentoService";
-import type { EvolucaoFormResult } from "@/frontend/components/clinica/EvolucaoTimeline";
-import type { FotoUploadResult } from "@/frontend/components/clinica/FotoGallery";
-import type { DocumentoUploadResult } from "@/frontend/components/clinica/DocumentoList";
+import type { EvolucaoFormResult } from "@/frontend/lib/form-types";
+import type { FotoUploadResult } from "@/frontend/lib/form-types";
+import type { DocumentoUploadResult } from "@/frontend/lib/form-types";
 
 const TIPOS_VALIDOS: TipoEvolucao[] = [
   "consulta",

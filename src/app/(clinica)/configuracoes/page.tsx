@@ -1,21 +1,17 @@
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/backend/lib/auth/session";
 import { createServerSupabaseClient } from "@/backend/lib/supabase/server";
-import { ConfiguracoesView } from "@/frontend/components/clinica/ConfiguracoesView";
-import { updateClinicaAction } from "./actions";
+import { Configuracoes } from "@/frontend/components/screens/clinica/Configuracoes";
 
-export default async function ConfiguracoesPage() {
+export default async function Page() {
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
   const supabase = createServerSupabaseClient();
-  const { data: clinica } = await supabase.from("clinica").select("*").limit(1).maybeSingle();
-
-  const clinicaData = clinica ?? {
-    id: "",
-    nome: null,
-    cnpj: null,
-    telefone: null,
-    email: null,
-    endereco: null,
-    cep: null,
-    logo_url: null,
-  };
-
-  return <ConfiguracoesView clinica={clinicaData} updateAction={updateClinicaAction} />;
+  const { count: pendentes } = await supabase.from("aprovacoes").select("*", { count: "exact", head: true }).eq("status", "pendente");
+  const { data: clinica } = await supabase.from("clinica").select("nome").limit(1).maybeSingle();
+  return <Configuracoes
+    user={{ name: user.nome_completo ?? "Usuário", role: user.tipo }}
+    aprovacoesPendentes={pendentes ?? 0}
+    clinicaNome={clinica?.nome ?? "Clínica"}
+  />;
 }
