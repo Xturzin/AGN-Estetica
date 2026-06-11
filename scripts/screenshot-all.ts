@@ -76,11 +76,12 @@ async function loginAs(
   await goto(page, loginRoute);
 
   // Aguarda o form hidratar (é client component)
-  await page.waitForSelector('input[name="identifier"]', { timeout: 15000 });
+  // Os inputs não possuem atributo name — usar placeholder e type como seletores
+  await page.waitForSelector('input[placeholder="seu@email.com"]', { timeout: 15000 });
 
   const creds = CREDENTIALS[role];
-  await page.fill('input[name="identifier"]', creds.identifier);
-  await page.fill('input[name="password"]', creds.password);
+  await page.fill('input[placeholder="seu@email.com"]', creds.identifier);
+  await page.fill('input[type="password"]', creds.password);
 
   await Promise.all([
     page.waitForNavigation({ waitUntil: "domcontentloaded", timeout: 20000 }).catch(() => {}),
